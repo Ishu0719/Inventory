@@ -12,32 +12,34 @@ import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+import { Select, MenuItem, FormControl, InputLabel, Modal, Box, Typography, Grid, Button, TextField } from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close'
+
 
 
 const columns = [
   { id: "SI_no", label: "SI NO.", flex: 1, minWidth: 50 },
-  { id: "Banner_name", label: "Banner Name", flex: 1, align: "right", minWidth: 100 },
-  { id: "Description", label: "Description", flex: 1, align: "right", minWidth: 150 },
+  { id: "Banner_name", label: "Banner Name", flex: 1, minWidth: 100 },
+  { id: "Description", label: "Description", flex: 1,  minWidth: 150 },
   {
     id: "IMG",
     label: "IMG",
     flex: 1,
-    align: "right",
+
     minWidth: 180,
   },
-  { id: "Valid_From", label: "Valid From", flex: 1, align: "right", minWidth: 180 },
+  { id: "Valid_From", label: "Valid From", flex: 1,  minWidth: 180 },
   {
     id: "Valid_To",
     label: "Valid To",
     flex: 1,
-    align: "right",
-    format: (value) => value.toFixed(2),
+    minWidth: 180 
+    
   },
 
   
-  { id: "Status", label: " Status", flex: 1, align: "right" },
-  { id: "action", label: "Action", flex: 1, align: "center" },
+  { id: "Status", label: " Status", flex: 1 },
+  { id: "action", label: "Action", flex: 1 },
 ];
 
 function createData(
@@ -96,6 +98,39 @@ export default function StickyHeadTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [data, setData] = React.useState(rows);
+  const [selectedBanner, setSelectedBanner] = React.useState(null);
+      const [editFormData, setEditFormData] = React.useState({});
+      const [viewModalOpen, setViewModalOpen] = React.useState(false);
+      const [editModalOpen, setEditModalOpen] = React.useState(false);
+      const [deleteModalOpen, setDeleteModalOpen] = React.useState(false);
+
+      const modalStyle = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '80%',
+        maxWidth: 800,
+        bgcolor: 'background.paper',
+        boxShadow: 24,
+        p: 4,
+        borderRadius: 1,
+        maxHeight: '90vh',
+        overflow: 'auto'
+      };
+  
+      const deleteModalStyle = {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: 400,
+      bgcolor: 'background.paper',
+      boxShadow: 24,
+      p: 4,
+      borderRadius: 1,
+      textAlign: 'center'
+    };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -105,20 +140,58 @@ export default function StickyHeadTable() {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
-
-  const handleDelete = (id) => {
-    console.log("Delete item with ID:", id);
-    // You can perform your delete logic here
+  const handleView = (banner) => {
+    console.log("ifgjbfdngb");
+    
+    setSelectedBanner(banner);
+    setViewModalOpen(true);
   };
 
-  const handleEdit = (id) => {
-    console.log("Edit item with ID:", id);
-    // You can open a modal or perform your edit logic here
+  const handleEdit = (banner) => {
+    setSelectedBanner(banner);
+    setEditFormData(banner);
+    setEditModalOpen(true);
   };
 
-  const handleView = (id) => {
-    console.log("View item with ID:", id);
-    // You can show more details of the item here
+  const handleDelete = (banner) => {
+    setSelectedBanner(banner);
+    setDeleteModalOpen(true);
+  };
+
+  const handleCloseViewModal = () => {
+    setViewModalOpen(false);
+    setSelectedBanner(null);
+  };
+
+  const handleCloseEditModal = () => {
+    setEditModalOpen(false);
+    setSelectedBanner(null);
+    setEditFormData({});
+  };
+  const handleCloseDeleteModal = () => {
+    setDeleteModalOpen(false);
+    setSelectedBanner(null);
+  };
+
+  const handleEditInputChange = (status) => (event) => {
+    setEditFormData({
+      ...editFormData,
+      [status]: event.target.value
+    });
+  };
+
+  const handleUpdate = () => {
+    console.log('Updating Product:', editFormData);
+    // Here you would typically make an API call to update the Product
+    handleCloseEditModal();
+  };
+
+  
+  
+  const handleConfirmDelete = () => {
+    console.log('Deleting Product:', selectedBanner);
+    // Here you would typically make an API call to delete the Product
+    handleCloseDeleteModal();
   };
 
   const handleDropdownChange = (columnId, value, SI_no) => {
@@ -127,13 +200,180 @@ export default function StickyHeadTable() {
     );
     setData(updatedRows);
   };
+ 
+  const renderViewModal = () => (
+    <Modal
+      open={viewModalOpen}
+      onClose={handleCloseViewModal}
+      aria-labelledby="view-modal-title"
+      aria-describedby="view-modal-description"
+    >
+      <Box sx={modalStyle}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+          <Typography id="view-modal-title" variant="h6" component="h2">
+            Banner Details
+          </Typography>
+          <IconButton onClick={handleCloseViewModal} size="small">
+            <CloseIcon />
+          </IconButton>
+        </Box>
+        {selectedBanner && (
+        <Grid container spacing={2}>
+           <Grid item xs={12} sm={6}>
+               <Typography variant="subtitle1"><strong>Banner Name:</strong> {selectedBanner.Banner_name}</Typography>
+           </Grid>
+           <Grid item xs={12} sm={6}>
+               <Typography variant="subtitle1"><strong>Description:</strong> {selectedBanner.Description}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+               <Typography variant="subtitle1"><strong>IMG:</strong> {selectedBanner.IMG}</Typography>
+            </Grid>
+           <Grid item xs={12}>
+              <Typography variant="subtitle1"><strong>Valid From:</strong> {selectedBanner.Valid_From}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+               <Typography variant="subtitle1"><strong>Valid To:</strong> {selectedBanner.Valid_To}</Typography>
+            </Grid>
+           <Grid item xs={12} sm={6}>
+              <Typography variant="subtitle1"><strong>Status:</strong> {selectedBanner.Status}</Typography>
+            </Grid>
+          </Grid>
+        )}
+    </Box>
+</Modal>);
+
+ const renderEditModal = () => (
+     <Modal
+       open={editModalOpen}
+       onClose={handleCloseEditModal}
+       aria-labelledby="edit-modal-title"
+      aria-describedby="edit-modal-description"
+                                            >
+     <Box sx={modalStyle}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+            <Typography id="edit-modal-title" variant="h6" component="h2">
+                Edit Banner
+             </Typography>
+         <IconButton onClick={handleCloseEditModal} size="small">
+          <CloseIcon />
+          </IconButton>
+         </Box>
+        <Grid  Grid container spacing={2}>
+             <Grid item xs={12} sm={6}>
+                <TextField
+                    fullWidth
+                    label="Banner Name"
+                    value={editFormData.Banner_name|| ''}
+                    onChange={handleEditInputChange('Banner_name')}
+                   />
+                              </Grid>
+                             <Grid item xs={12} sm={6}>
+                              <TextField
+                               fullWidth
+                                value={editFormData.Description || ''}
+                              onChange={handleEditInputChange('Description')}
+                                                     />
+                                </Grid>
+                                <Grid item xs={12}>
+                                <TextField
+                                 fullWidth
+                                 label="IMG"
+                                 value={editFormData.IMG|| ''}
+                                 onChange={handleEditInputChange('IMG')}
+                                  />
+                               </Grid>
+                             <Grid item xs={12}>
+                             <TextField
+                             fullWidth
+                             label="Valid From"
+                            value={editFormData.Valid_From|| ''}
+                             type="date"
+                          onChange={handleEditInputChange('Valid_From')}
+                          
+                         />
+                         </Grid>
+                             <Grid item xs={12}>
+                           <TextField
+                            fullWidth
+                            label="Valid To"
+                            value={editFormData.Valid_To|| ''}
+                               type="date"
+                              onChange={handleEditInputChange('Valid_To')}
+                              
+                            />
+                            </Grid>
+                           <Grid item xs={12} sm={6}>
+                          <FormControl
+                            variant="outlined"
+                            fullWidth
+                           >
+                           <InputLabel> Status</InputLabel>
+                           <Select
+                             value={editFormData.Status || ''}
+                               onChange={(e) => handleDropdownChange(
+                              "Status",
+                               e.target.value
+                                                                                                                        
+                               )
+                            }
+                            label=" Status"
+                        >
+                           <MenuItem value="active">Active</MenuItem>
+                          <MenuItem value="inactive">In Active</MenuItem>
+                                                                                                                   
+                           </Select>
+                         </FormControl>
+                                                                                      
+                                                                                        
+                </Grid>
+
+           </Grid> 
+                                                            
+ <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 3 }}>
+      <Button variant="outlined" onClick={handleCloseEditModal}>
+             Cancel
+       </Button>
+      <Button variant="contained" onClick={handleUpdate}>
+            Update
+      </Button>
+</Box>
+ </Box>
+   </Modal>
+             );
+           const renderDeleteModal = () => (
+              <Modal
+                open={deleteModalOpen}
+                onClose={handleCloseDeleteModal}
+                aria-labelledby="delete-modal-title"
+                aria-describedby="delete-modal-description"
+              >
+                <Box sx={deleteModalStyle}>
+                        <Typography id="delete-modal-title" variant="h6" component="h2" gutterBottom>
+                          Confirm Delete
+                        </Typography>
+                        <Typography id="delete-modal-description" sx={{ mb: 3 }}>
+                          Are you sure you want to delete this Banner?
+                        </Typography>
+                        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+                          <Button variant="outlined" onClick={handleCloseDeleteModal}>
+                            No
+                          </Button>
+                          <Button variant="contained" color="error" onClick={handleConfirmDelete}>
+                            Yes
+                          </Button>
+                        </Box>
+                      </Box>
+                       </Modal>
+                        );
+
 
   return (
     <Paper sx={{ width: "100%", overflow: "hidden" }}>
       <TableContainer
         className="table"
         sx={{
-          maxHeight: 440,
+          overflow:"auto",
+          maxWidth:"100%",         maxHeight: 440,
           fontSize: "12px",
           marginLeft: "20px",
           marginTop: "0px",
@@ -206,19 +446,22 @@ export default function StickyHeadTable() {
                         ) : column.id === "action" ? (
                           <div style={{ display: "flex" }}>
                             <IconButton
-                              onClick={() => handleView(row.SI_no)}
+                              onClick={() => handleView(row)}
+                              style={{color:"blue"}}
                               color="black"
                             >
                               <VisibilityIcon />
                             </IconButton>
                             <IconButton
-                              onClick={() => handleEdit(row.SI_no)}
+                              onClick={() => handleEdit(row)}
+                              style={{color:"green"}}
                               color="black"
                             >
                               <EditIcon />
                             </IconButton>
                             <IconButton
-                              onClick={() => handleDelete(row.SI_no)}
+                              onClick={() => handleDelete(row)}
+                              style={{color:"red"}}
                               color="black"
                             >
                               <DeleteIcon />
@@ -246,6 +489,10 @@ export default function StickyHeadTable() {
         onPageChange={handleChangePage}
         onRowsPerPageChange={handleChangeRowsPerPage}
       />
+      {renderViewModal()}
+      {renderEditModal()}
+      {renderDeleteModal()}
     </Paper>
+    
   );
 }
