@@ -8,10 +8,12 @@ import LayoutCustomer from "./Layout/LayoutCustomer";
 import LayoutBanner from "./Layout/LayoutBanner";
 import LayoutDiscount from "./Layout/LayoutDiscount";
 import LayoutFinance from "./Layout/LayoutFinance";
-
+import { ToastContainer } from "react-toastify";
 function App() {
   return (
+    
     <BrowserRouter>
+    <ToastContainer />
       <Routes>
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/" element={<LayoutDashboard />} />

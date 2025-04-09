@@ -22,6 +22,7 @@ export const createDiscount = async (req, res) => {
             status
             })
         res.status(201).json({
+            success: true,
             message: 'discount created successfully'
         });
     } catch (error) {
@@ -34,7 +35,10 @@ export const getAllDiscount = async (req, res) => {
         const discounts = await Discount.find();
         res.json(discounts);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({
+            success:false,
+            message: 'Error fetching discounts',
+            message: error.message });
     }
 };
 
@@ -44,7 +48,9 @@ export const getDiscountById = async (req, res) => {
         const discountId = req.params.id;
         const discount = await discount.findById(discountId);
         if (!discount) {
-            return res.status(404).json({ message: 'discount id not found' });
+            return res.status(404).json({
+                success:false,
+                message: 'discount id not found' });
         }
         res.json(discount);
     } catch (error) {
@@ -86,6 +92,7 @@ export const updateDiscount = async (req, res) => {
         );
 
         res.json({
+            success:true,
             message: 'discount updated successfully',
             discount: updatedDiscount
         });
@@ -101,7 +108,9 @@ export const deleteDiscount = async (req, res) => {
         if (!deletedDiscount) {
             return res.status(404).json({ message: 'discount not found' });
         }
-        res.json({ message: 'discount deleted successfully' });
+        res.json({
+            success:true,
+            message: 'discount deleted successfully' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

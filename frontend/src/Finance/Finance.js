@@ -1,92 +1,134 @@
-import * as React from 'react';
-import Paper from '@mui/material/Paper';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Select, MenuItem, FormControl, InputLabel, Modal, Box, Typography, Grid, Button, TextField } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { useEffect, useState } from "react";
+import {
+  Table,
+  Select,
+  MenuItem,
+  TableHead,
+  TableBody,
+  TableRow,
+  TableCell,
+  IconButton,
+  Modal,
+  Box,
+  Typography,
+  Paper,
+  Grid,
+  TextField,
+  Button,
+  TableContainer,
+} from "@mui/material";
+import {
+  Visibility,
+  Edit,
+  Delete,
+  Close as CloseIcon,
+} from "@mui/icons-material";
+import {  InputAdornment } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
+import { useNavigate } from "react-router-dom";
+import { FormControl, InputLabel } from "@mui/material";
 
-const columns = [
-  { id: 'SI_no', label: 'SI NO.', flex: 1, minWidth: 50 },
-  { id: 'Name', label: 'Name', flex: 1,  minWidth: 100 },
-  { id: 'Amount', label: 'Amount', flex: 1, minWidth: 150 },
-  { id: 'Transaction', label: 'Transaction', flex: 1,  minWidth: 180 },
-  { id: 'Category', label: 'Category', flex: 1,  minWidth: 180 },
-  { id: 'Payment_Mode', label: 'Payment Mode', flex: 1 },
-  { id: 'Status', label: ' Status', flex: 1 },
-  { id: 'action', label: 'Action', flex: 1,  },
-];
+import axios from "axios";
+import { toast } from "react-toastify";
+const FinanceTable = () => {
 
-function createData(SI_no, Name, Amount, Transaction, Category,  payment_Mode, Status) {
-  return { SI_no, Name, Amount, Transaction, Category,  payment_Mode, Status};
-}
-
-const rows = [
-  createData('1', 'Ayushi', 5000, 'expense', 'rent',  'upi', 'cancel'),
-  createData('2', 'John',15000,  'income','salary','credit card','completed'),
-  createData('3', 'Peter', 2200,'expense','utilities','bank transfer','pending'),
-  createData('4', 'Jane', 18000, 'income','payment','debit card','completed'),
-  createData('5', 'David', 9000, 'expense','salary','credit card','pending'),
-];
-
-export default function StickyHeadTable() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const [data, setData] = React.useState(rows);
-const [selectedFinance,setSelectedFinance] = React.useState(null);
-  const [editFormData, setEditFormData] = React.useState({});
-  const [viewModalOpen, setViewModalOpen] = React.useState(false);
-  const [editModalOpen, setEditModalOpen] = React.useState(false);
-  const [deleteModalOpen, setDeleteModalOpen] = React.useState(false);
+  const [data, setData] = useState([
+    {
+      id: 1,
+      name:"isha singh",
+   amount:"50012",
+   transaction:"Expense",
+   category:"Rent",
+   payment_Mode:"Credit Card",
+   status:"Pending",
+      
+     
+    },
+    {
+      id: 2,
+      name:"isha singh",
+      amount:"50012",
+      transaction:"Expense",
+      category:"Rent",
+      payment_Mode:"Credit Card",
+      status:"Pending",
+      
+    },
+    {
+    id:3,
+    name:"isha singh",
+    amount:"50012",
+    transaction:"Expense",
+    category:"Rent",
+    payment_Mode:"Credit Card",
+    status:"Pending",
+    },
+   
+  ]);
 
   const modalStyle = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '80%',
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "80%",
     maxWidth: 800,
-    bgcolor: 'background.paper',
+    bgcolor: "background.paper",
     boxShadow: 24,
     p: 4,
     borderRadius: 1,
-    maxHeight: '90vh',
-    overflow: 'auto'
+    maxHeight: "90vh",
+    overflow: "auto",
   };
 
   const deleteModalStyle = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    ...modalStyle,
     width: 400,
-    bgcolor: 'background.paper',
-    boxShadow: 24,
-    p: 4,
-    borderRadius: 1,
-    textAlign: 'center'
+    textAlign: "center",
   };
 
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
+  const [viewModalOpen, setViewModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [selectedFinance, setSelectedFinance] = useState(null);
+  const [editFormData, setEditFormData] = useState({});
+  const [finances ,setFinances] = useState([]);
+  const[searchTerm, setSearchTerm] = useState("");
+const[apiFinances,setApiFinances] =useState([]);
+ const [addFormData, setAddFormData] = useState({
+      name: "",
+      amount: "",
+      transaction: "Income",
+      category: "Rent",
+      payment_Mode: "UPI",
+      status: "Completed",
+     
+    });
+  
+    const navigate = useNavigate();
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [customers, setCustomers] = useState([]);
+  
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
 
+  const getAllFinance = async () => {
+    try {
+      const res = await axios.get(
+       `http://localhost:3002/finance/getAllFinance`
+      );
+      console.log("response", res.data);
+      setFinances(res.data);
+      setApiFinances(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getAllFinance();
+  }, []);
   const handleView = (finance) => {
-    console.log("ifgjbfdngb");
-    
     setSelectedFinance(finance);
     setViewModalOpen(true);
   };
@@ -102,374 +144,539 @@ const [selectedFinance,setSelectedFinance] = React.useState(null);
     setDeleteModalOpen(true);
   };
 
-  const handleCloseViewModal = () => {
-    setViewModalOpen(false);
-    setSelectedFinance(null);
+  const handleAddFinance = async () => {
+    try {
+      const res = await axios.post(
+        `http://localhost:3002/finance/createFinance`,
+        addFormData
+      );
+      if (res.data.success) {
+        toast.success(res.data.message);
+        getAllFinance();
+        handleCloseAddModal();
+        setAddFormData({
+          name: "",
+          amount: "",
+          transaction: "Income",
+          category: "Rent",
+          payment_Mode: "UPI",
+          status: "Completed",
+          
+        });
+
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data?.message||"Failed adding customer"); 
+    }
   };
 
-  const handleCloseEditModal = () => {
-    setEditModalOpen(false);
-    setSelectedFinance(null);
-    setEditFormData({});
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
   };
 
-  const handleCloseDeleteModal = () => {
-    setDeleteModalOpen(false);
-    setSelectedFinance(null);
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
   };
 
-  const handleEditInputChange = (status) => (event) => {
+  const handleTitleChange = (id,newTitle)=>{
+    setFinances((prevFinances) =>
+      prevFinances.map((finance) =>
+        finance.id === id ? { ...finance, title: newTitle } : finance
+      )
+    );
+  }
+
+  const handleTypeChange = (id, newType) => {
+    setFinances((prevFinances) =>
+      prevFinances.map((finance) =>
+        finance.id === id ? { ...finance, type: newType } : finance
+      )
+    );
+  }
+const handleAddInputChange = (field) => (event) => {
+  setAddFormData({
+    ...addFormData,
+    [field]: event.target.value,
+  });
+};
+
+  const [addModalOpen, setAddModalOpen] = useState(false);
+const handleCloseAddModal = () => setAddModalOpen(false);
+  const handleCloseViewModal = () => setViewModalOpen(false);
+  const handleCloseEditModal = () => setEditModalOpen(false);
+  const handleCloseDeleteModal = () => setDeleteModalOpen(false);
+
+  const handleEditInputChange = (field) => (event) => {
     setEditFormData({
       ...editFormData,
-      [status]: event.target.value
+      [field]: event.target.value,
     });
   };
 
-  const handleUpdate = () => {
-    console.log('Updating Finance:', editFormData);
+  const handleUpdate = async () => {
+    console.log("Updating Finance:", editFormData);
     // Here you would typically make an API call to update the Finance
     handleCloseEditModal();
+     try{
+          const res = await axios.put(
+            `http://localhost:3002/finance/updateFinance/${selectedFinance._id}`,
+            editFormData
+          );
+          if(res.data.success){
+            toast.success(res.data.message);
+            getAllFinance();
+            setEditFormData({});
+          }
+        }
+        catch(error){
+          console.log(error);
+          toast.error(error.response.data.message);
+        } 
   };
 
- const handleConfirmDelete = () => {
-    console.log('Deleting Finance:', selectedFinance);
+  const handleConfirmDelete = async () => {
+    console.log("Deleting Finance:", selectedFinance);
     // Here you would typically make an API call to delete the Finance
     handleCloseDeleteModal();
+     try {
+            const res = await axios.delete(
+           `http://localhost:3002/finance/deleteFinance/${selectedFinance._id}`
+          ); 
+         if(res.data.success){
+           toast.success(res.data.message);
+           getAllFinance();
+         }
+       }
+       catch (error) {
+         console.log(error);
+          toast.error(error.res.data.message);
+       }
   };
-
-  const handleDropdownChange = (columnId, value, SI_no) => {
-    const updatedRows = data.map((row) =>
-      row.SI_no === SI_no ? { ...row, [columnId]: value } : row
+  const handleStatusChange = (id, newStatus) => {
+    setData((prevData) =>
+      prevData.map((row) =>
+        row.id === id ? { ...row, status: newStatus } : row
+      )
     );
-    setData(updatedRows);
   };
+  const handlePayment_ModeChange = (id, newPayment_Mode) => {
+    setData((prevData) =>
+      prevData.map((row) =>
+        row.id === id ? { ...row, payment_Mode: newPayment_Mode } : row
+      )
+    );
+  };
+  const handleTransactionChange = (id, newTransaction) => {
+    setData((prevData) =>
+      prevData.map((row) =>
+        row.id === id ? { ...row, transaction: newTransaction } : row
+      )
+    );
+  };
+  const handleCategoryChange = (id, newCategory) => {
+    setData((prevData) =>
+      prevData.map((row) =>
+        row.id === id ? { ...row, category: newCategory } : row
+      )
+    );
+  };
+  const handleSearchChange = (event) => {
+    const value = event.target.value.toLowerCase();
+    setSearchTerm(value);
+    if(value === ""){setFinances(apiFinances);
+      return;}
+   
+  
+  
+  const filtered = apiFinances.filter((finance) =>{
+    return(
+    finance.name.toLowerCase().includes(value)||
+    finance.amount.toString().includes(value) ||
+    finance.transaction.toLowerCase().includes(value) ||
+    finance.category.toLowerCase().includes(value)||
+    finance.payment_Mode.toLowerCase().includes(value) ||
+    finance.status.toLowerCase().includes(value)
+    )
+  });
+    setFinances(filtered);
+}; 
 
-  const renderViewModal = () => (
-    <Modal
-      open={viewModalOpen}
-      onClose={handleCloseViewModal}
-      aria-labelledby="view-modal-title"
-      aria-describedby="view-modal-description"
+const handleAddNew = () => {
+  // Logic to add a new finance
+  setAddModalOpen(true);  
+  // You can redirect to a form or show a modal here
+}
+
+  
+  return (
+   <>
+   <h3>FINANCE DETAILS</h3>
+    <div style={{ display: "flex", alignItems: "center", marginBottom: "50px",justifyContent: "space-between" }}>
+       <TextField
+              className='search'
+   
+           label="Search"
+           variant="outlined"
+           fullWidth
+          value={searchTerm}
+          onChange={handleSearchChange}
+           InputProps={{
+             startAdornment: (
+               <InputAdornment position="end">
+                 <SearchIcon />
+               </InputAdornment>
+             ),
+           }}
+           style={{maxWidth:"300px", alignItems:"center", marginLeft: "800px", marginRight: "10px" }}
+         />
+   
+   
+       <Button 
+       variant="contained" 
+       color="primary"   
+    onClick={handleAddNew}
+    style={{ marginLeft: "auto", backgroundColor: "rgb(4,4,100)", color: "white", marginRight: "20px", marginTop:"-10px" }}
+   
+     >
+       <AddIcon/>
+       Add Finance
+     </Button>
+     </div>
+    
+
+    <TableContainer
+      component={Paper}
+      style={{ overflowX: "auto", maxWidth: 1500 }}
     >
-      <Box sx={modalStyle}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-          <Typography id="view-modal-title" variant="h6" component="h2">
-            Finance Details
-          </Typography>
-          <IconButton onClick={handleCloseViewModal} size="small">
-            <CloseIcon />
-          </IconButton>
+      <Table className="w-full border border-gray-300">
+        <TableHead
+          sx={{
+            top: 0,
+            background: "white",
+            zIndex: 2,
+            position: "sticky",
+            fontWeight: "bold",
+          }}
+        >
+          <TableRow className="bg-gray-200">
+            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              S.No
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              Name
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            Amount
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              Transaction
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            Category
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              Payment Mode
+            </TableCell>
+           
+            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              Status
+            </TableCell>
+            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              Action
+            </TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          { finances.length>0 && finances.map((finance,index) => (
+            <TableRow
+              key={finance._id}
+              className="text-center"
+              sx={{ fontWeight: "bold" }}
+            >
+              <TableCell
+                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                className="border p-2"
+              >
+                {index + 1}
+              </TableCell>
+              <TableCell
+                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                className="border p-2"
+              >
+                {finance.name}
+              </TableCell>
+              <TableCell
+                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                className="border p-2"
+              >
+                {finance.amount}
+              </TableCell>
+              <TableCell
+                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                className="border p-2"
+              >
+                {finance.transaction}
+                
+              </TableCell>
+              <TableCell
+                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                className="border p-2"
+              >
+                {finance.category}
+               
+              </TableCell>
+              <TableCell
+                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                className="border p-2"
+              >
+                {finance.payment_Mode}
+               
+              </TableCell>
+              
+              <TableCell
+                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                className="border p-2"
+              >
+                {finance.status}
+                
+              </TableCell>
+              <TableCell sx={{ fontWeight: "bolder" }} className="border p-2">
+                <TableContainer
+                  style={{
+                    display: "flex",
+                    gap: "5px",
+                    justifyContent: "center",
+                  }}
+                >
+                  <IconButton
+                    sx={{ color: "blue" }}
+                    fontweight="bolder"
+                    onClick={() => handleView(finance)}
+                  >
+                    <Visibility />
+                  </IconButton>
+                  <IconButton
+                    sx={{ color: "green" }}
+                    onClick={() => handleEdit(finance)}
+                  >
+                    <Edit />
+                  </IconButton>
+                  <IconButton
+                    sx={{ color: "red" }}
+                    onClick={() => handleDelete(finance)}
+                  >
+                    <Delete />
+                  </IconButton>
+                </TableContainer>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
+      {/* View Modal */}
+      <Modal open={viewModalOpen} onClose={handleCloseViewModal}>
+        <Box sx={modalStyle}>
+          <Box display="flex" justifyContent="space-between">
+            <Typography variant="h6">Finance Details</Typography>
+            <IconButton onClick={handleCloseViewModal}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+          {selectedFinance && (
+            <Grid container spacing={2} mt={2}>
+              {Object.entries(selectedFinance).map(([key, value]) => (
+                <Grid item xs={6} key={key}>
+                  <Typography>
+                    <strong>{key}:</strong> {value}
+                  </Typography>
+                </Grid>
+              ))}
+            </Grid>
+          )}
         </Box>
-        {selectedFinance && (
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1"><strong>Name:</strong> {selectedFinance.Name}</Typography>
+      </Modal>
+      <Modal open={addModalOpen} onClose={handleCloseAddModal}>
+        <Box sx={modalStyle}>
+          <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
+            <Typography variant="h6" fontWeight="bold">Add New Finance</Typography>
+            <IconButton onClick={handleCloseAddModal}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+          <Grid container spacing={3}>
+          <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Name"
+                name="name"
+                value={addFormData.name}
+                onChange={handleAddInputChange('name')}
+                required
+              />
+            </Grid>
+           
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Amount"
+                name="amount"
+                value={addFormData.amount}
+                onChange={handleAddInputChange('amount')}
+                required
+              />
             </Grid>
             <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1"><strong>Amount:</strong> ₹{selectedFinance.Amount}</Typography>
+              <FormControl fullWidth>
+                <InputLabel id="transaction-label">Transaction</InputLabel>
+                <Select
+                  labelId="transaction-label"
+                  name="transaction"
+                  value={addFormData.transaction}
+                  onChange={handleAddInputChange('transaction')}
+                  required
+                >
+                  <MenuItem value="Income">Income</MenuItem>
+                  <MenuItem value="Expense">Expense</MenuItem>
+                  
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel id="category-label">Category</InputLabel>
+                <Select
+                  labelId="category-label"
+                  name="category"
+                  value={addFormData.category}
+                  onChange={handleAddInputChange('category')}
+                
+                  required
+                >
+                  <MenuItem value="Rent">Rent</MenuItem>
+                  <MenuItem value="Salary">Salary</MenuItem>
+                  <MenuItem value="Utilities">Utilities</MenuItem>
+                  <MenuItem value="Payment">Payment</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+           
+            
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel id="payment_Mode-label">Payment Mode</InputLabel>
+                <Select
+                  labelId="payment_Mode-label"
+                  name="payment_Mode"
+                  value={addFormData.payment_Mode}
+                  onChange={handleAddInputChange('payment_Mode')}
+                  required
+                >
+                  <MenuItem value="UPI">UPI</MenuItem>
+                  <MenuItem value="Credit Card">Credit Card</MenuItem>
+                  <MenuItem value="Debit Card">Debit Card</MenuItem>
+                  <MenuItem value="Bank Transfer">Bank Transfer</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth>
+                <InputLabel id="status-label">Status</InputLabel>
+                <Select
+                  labelId="status-label"
+                  name="status"
+                  value={addFormData.status}
+                  onChange={handleAddInputChange('status')}
+                  required
+                >
+                  <MenuItem value="Completed">Completed</MenuItem>
+                  <MenuItem value="Pending">Pending</MenuItem>
+                  <MenuItem value="Cancel">Cancel</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="subtitle1"><strong>Transaction:</strong> {selectedFinance.Transaction}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1"><strong>Category:</strong> {selectedFinance.Category}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1"><strong>Payment Mode:</strong>{selectedFinance.payment_Mode}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <Typography variant="subtitle1"><strong>Status:</strong> {selectedFinance.Status}</Typography>
+              <Box display="flex" justifyContent="flex-end" gap={2}>
+                <Button 
+                  variant="outlined" 
+                  onClick={handleCloseAddModal}
+                >
+                  Cancel
+                </Button>
+                <Button 
+                  variant="contained" 
+                  color="primary"
+                  onClick={handleAddFinance}
+                >
+                  Save Finance
+                </Button>
+              </Box>
             </Grid>
           </Grid>
-        )}
-              
-      </Box>
-    </Modal>
-  );
+        </Box>
+      </Modal>
+      
 
-  const renderEditModal = () => (
-    <Modal
-    open={editModalOpen}
-    onClose={handleCloseEditModal}
-    aria-labelledby="edit-modal-title"
-    aria-describedby="edit-modal-description"
-  >
-    <Box sx={modalStyle}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography id="edit-modal-title" variant="h6" component="h2">
-          Edit Finance
-        </Typography>
-        <IconButton onClick={handleCloseEditModal} size="small">
-          <CloseIcon />
-        </IconButton>
-      </Box>
-      
-      <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label="Name"
-            value={editFormData.Name || ''}
-            onChange={handleEditInputChange('Name')}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            fullWidth
-            label="Amount"
-            value={editFormData.Amount || ''}
-            onChange={handleEditInputChange('Amount')}
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <FormControl
-                                     variant="outlined"
-                                     sx={{ minWidth: 394 }}
-                                   >
-                                     <InputLabel> Transaction</InputLabel>
-                                     <Select
-                                       value={editFormData.Transaction || ''}
-                                       onChange={(e) =>
-                                         handleDropdownChange(
-                                           "Transaction",
-                                           e.target.value
-                                           
-                                         )
-                                       }
-                                       label=" Transaction"
-                                     >
-                                       <MenuItem value="income">Income</MenuItem>
-                                       <MenuItem value="expense">Expense</MenuItem>
-                                      
-                                     </Select>
-                                   </FormControl>
-          
-        </Grid>
-        <Grid item xs={12} sm={6}>
-           <FormControl
-                                     variant="outlined"
-                                     sx={{ minWidth: 394 }}
-                                   >
-                                     <InputLabel> Category</InputLabel>
-                                     <Select
-                                       value={editFormData.Category || ''}
-                                       onChange={(e) =>
-                                         handleDropdownChange(
-                                           "Category",
-                                           e.target.value
-                                           
-                                         )
-                                       }
-                                       label="Category"
-                                     >
-                                       <MenuItem value="salary">Salary</MenuItem>
-                              <MenuItem value="payment">Payment</MenuItem>
-                              <MenuItem value="rent">Rent</MenuItem>
-                              <MenuItem value="utilities">Utilities</MenuItem>
-                              
-                                      
-                                     </Select>
-                                     </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-        <FormControl variant="outlined" sx={{ minWidth: 120 }}>
-                            <InputLabel>Payment Mode </InputLabel>
-                            <Select
-                              value={editFormData.payment_Mode || ''}
-                              onChange={(e) => handleDropdownChange('payment_Mode', e.target.value)}
-                              label="Payment Mode"
-                            >
-                              <MenuItem value="cash">Cash</MenuItem>
-                              <MenuItem value="bank transfer">Bank Transfer</MenuItem>
-                              <MenuItem value="upi">UPI</MenuItem>
-                              <MenuItem value="credit card">Credit Card</MenuItem>
-                              <MenuItem value="debit card">Debit Card</MenuItem>
-                            </Select>
-                          </FormControl>
-        </Grid>
-        <Grid item xs={12} sm={6}>
-        <FormControl variant="outlined" sx={{ minWidth: 120 }}>
-                            <InputLabel> Status</InputLabel>
-                            <Select
-                              value={editFormData.Status||''}
-                              onChange={(e) => handleDropdownChange('Status', e.target.value)}
-                              label="Status"
-                            >
-                              <MenuItem value="pending">Pending</MenuItem>
-                              <MenuItem value="completed">Completed</MenuItem>
-                              <MenuItem value="cancel">Cancel</MenuItem>
-                            </Select>
-                          </FormControl>
-        </Grid>
-      
+      {/* Edit Modal */}
+      <Modal open={editModalOpen} onClose={handleCloseEditModal}>
+        <Box sx={modalStyle}>
+          <Box display="flex" justifyContent="space-between">
+            <Typography variant="h6">Edit Finance</Typography>
+            <IconButton onClick={handleCloseEditModal}>
+              <CloseIcon />
+            </IconButton>
+          </Box>
+          <Grid container spacing={2} mt={2}>
+            {Object.keys(editFormData)
+            .filter((field) => field !== "createdAt" && field !== "updatedAt" && field !== "__v" && field !== "_id")
+            .map((field) => (
+              <Grid item xs={6} key={field}>
+                <TextField
+                  label={field}
+                  value={editFormData[field] || ""}
+                  onChange={handleEditInputChange(field)}
+                  fullWidth
+                />
+              </Grid>
+            ))}
           </Grid>
-  
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2, mt: 3 }}>
+          <Box display="flex" justifyContent="flex-end" mt={3}>
             <Button variant="outlined" onClick={handleCloseEditModal}>
               Cancel
             </Button>
-            <Button variant="contained" onClick={handleUpdate}>
+            <Button variant="contained" onClick={handleUpdate} sx={{ ml: 2 }}>
               Update
             </Button>
           </Box>
         </Box>
       </Modal>
-    );
 
-    const renderDeleteModal = () => (
-      <Modal
-        open={deleteModalOpen}
-        onClose={handleCloseDeleteModal}
-        aria-labelledby="delete-modal-title"
-        aria-describedby="delete-modal-description"
-      >
+      {/* Delete Modal */}
+      <Modal open={deleteModalOpen} onClose={handleCloseDeleteModal}>
         <Box sx={deleteModalStyle}>
-          <Typography id="delete-modal-title" variant="h6" component="h2" gutterBottom>
-            Confirm Delete
-          </Typography>
-          <Typography id="delete-modal-description" sx={{ mb: 3 }}>
+          <Typography variant="h6">Confirm Delete</Typography>
+          <Typography my={2}>
             Are you sure you want to delete this Finance?
           </Typography>
-          <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
+          <Box display="flex" justifyContent="center" gap={2}>
             <Button variant="outlined" onClick={handleCloseDeleteModal}>
-              No
+              CANCLE
             </Button>
-            <Button variant="contained" color="error" onClick={handleConfirmDelete}>
-              Yes
+            <Button
+              variant="contained"
+              color="error"
+              onClick={handleConfirmDelete}
+            >
+              DELETE
             </Button>
-            </Box>
-      </Box>
-    </Modal>
+          </Box>
+        </Box>
+      </Modal>
+    </TableContainer>
+    </>
   );
+};
 
-  return (
-    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <TableContainer className="table" sx={{ maxHeight: 440, fontSize: '12px', marginLeft: '20px', marginTop: '0px', marginRight: '20px' }}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {columns.map((column) => (
-                <TableCell
-                  key={column.id}
-                  align={column.align}
-                  style={{
-                
-                    fontWeight: 'bolder',
-                    fontSize: '14px',
-                    padding: '12px',  // Added padding to cells for better spacing
-                  }}
-                >
-                  {column.label}
-                </TableCell>
-              ))}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((row) => (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.SI_no} sx={{ height: '60px' }}> {/* Increased row height for better spacing */}
-                  {columns.map((column) => {
-                    const value = row[column.id];
-                    return (
-                      <TableCell
-                        key={column.id}
-                        align={column.align}
-                        sx={{ padding: '12px' }}  // Added padding to table cells for spacing
-                      >
-                        {column.id === 'Transaction' ? (
-                            <FormControl variant="outlined" sx={{ minWidth: 140 }}>
-                              <InputLabel>Transaction </InputLabel>
-                              <Select
-                                value={row.Transaction}
-                                onChange={(e) => handleDropdownChange('Transaction', e.target.value, row.SI_no)}
-                                label="Transaction"
-                              >
-                                <MenuItem value="income">Income</MenuItem>
-                                <MenuItem value="expense">Expense</MenuItem>
-                                
-                              </Select>
-                            </FormControl>
-                          ) :
-                          column.id === 'Category' ? (
-                          <FormControl variant="outlined" sx={{ minWidth: 120 }}>
-                            <InputLabel>Category</InputLabel>
-                            <Select
-                              value={row.Category}
-                              onChange={(e) => handleDropdownChange('Category', e.target.value, row.SI_no)}
-                              label="Category "
-                            >
-                              <MenuItem value="salary">Salary</MenuItem>
-                              <MenuItem value="payment">Payment</MenuItem>
-                              <MenuItem value="rent">Rent</MenuItem>
-                              <MenuItem value="utilities">Utilities</MenuItem>
-                              
-                            </Select>
-                          </FormControl>
-                        ) :column.id === 'Payment_Mode' ? (
-                          <FormControl variant="outlined" sx={{ minWidth: 120 }}>
-                            <InputLabel>Payment Mode </InputLabel>
-                            <Select
-                              value={row.payment_Mode}
-                              onChange={(e) => handleDropdownChange('payment_Mode', e.target.value, row)}
-                              label="Payment Mode"
-                            >
-                              <MenuItem value="cash">Cash</MenuItem>
-                              <MenuItem value="bank transfer">Bank Transfer</MenuItem>
-                              <MenuItem value="upi">UPI</MenuItem>
-                              <MenuItem value="credit card">Credit Card</MenuItem>
-                              <MenuItem value="debit card">Debit Card</MenuItem>
-                            </Select>
-                          </FormControl>
-                        ) : column.id === 'Status' ? (
-                          <FormControl variant="outlined" sx={{ minWidth: 120 }}>
-                            <InputLabel> Status</InputLabel>
-                            <Select
-                              value={row.Status}
-                              onChange={(e) => handleDropdownChange('Status', e.target.value, row.SI_no)}
-                              label="Status"
-                            >
-                              <MenuItem value="pending">Pending</MenuItem>
-                              <MenuItem value="completed">Completed</MenuItem>
-                              <MenuItem value="cancel">Cancel</MenuItem>
-                            </Select>
-                          </FormControl>
-                        ) : column.id === 'action' ? (
-                          <div  style={{display:'flex'}}>
-                            <IconButton onClick={() => handleView(row)} style={{color:"blue"}}>
-                              <VisibilityIcon />
-                            </IconButton>
-                            <IconButton onClick={() => handleEdit(row)} style={{color:"green"}} >
-                              <EditIcon />
-                            </IconButton>
-                            <IconButton onClick={() => handleDelete(row)} style={{color:"red"}} >
-                              <DeleteIcon />
-                            </IconButton>
-                          </div>
-                        ) : (
-                          column.format && typeof value === 'number' ? column.format(value) : value
-                        )}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 50]}
-        component="div"
-        count={data.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-       {renderViewModal()}
-      {renderEditModal()}
-      {renderDeleteModal()}
-    </Paper>
-  );
-}
-
+export default FinanceTable;

@@ -2,7 +2,7 @@ import React from "react";
 import Header from "../Component/Header/Header";
 import Sidebar from "../Component/Sidebar/Sidebar";
 import Banner from "../Banner/Banner";
-import Search from "../Search/Search";
+
 
 const LayoutBanner = () => {
   return (
@@ -12,7 +12,7 @@ const LayoutBanner = () => {
           <Sidebar />
           <div className="content">
             <Header className="header" />
-            <Search />
+          
             <Banner />
           </div>
         </div>

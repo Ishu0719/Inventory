@@ -57,10 +57,16 @@ body {
   align-items: center;
 }
 .logo {
-  width:auto;
+  height:100px;
+  width:200px;
   object-fit: cover;
-  margin:9px;
-  padding: 15px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  
+  
 }
 .menu-link {
   display: flex;
@@ -85,14 +91,6 @@ body {
   background-color: #7d4f0a;
 }
 
-.logo {
-  height: 60px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 24px;
-  cursor: pointer;
-}
 /* Layout */
 
 .layout {
@@ -107,7 +105,7 @@ body {
 
 .sidebar {
   width: 260px;
-  background-color: rgb(33, 30, 17);
+  background-color: rgb(4,4,44);
   color: white;
   padding: 10px;
 }

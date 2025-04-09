@@ -25,6 +25,7 @@ export const createBanner= async (req, res) => {
             valid_To,
             status,})
         res.status(201).json({
+            success: true,
             message: 'banner created successfully'
         });
     } catch (error) {
@@ -47,7 +48,9 @@ export const getBannerById = async (req, res) => {
         const bannerId = req.params.id;
         const banner = await banner.findById(bannerId);
         if (!banner) {
-            return res.status(404).json({ message: 'banner id not found' });
+            return res.status(404).json({
+                success:false,
+                message: 'banner id not found' });
         }
         res.json(banner);
     } catch (error) {
@@ -86,6 +89,7 @@ export const updateBanner = async (req, res) => {
         );
 
         res.json({
+            success:true,
             message: 'banner updated successfully',
             banner: updatedBanner
         });
@@ -101,7 +105,9 @@ export const deleteBanner = async (req, res) => {
         if (!deletedBanner) {
             return res.status(404).json({ message: 'banner not found' });
         }
-        res.json({ message: 'banner deleted successfully' });
+        res.json({
+            success:true,
+            message: 'banner deleted successfully' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

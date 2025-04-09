@@ -21,6 +21,7 @@ export const createFinance = async (req, res) => {
             payment_Mode,
             status,})
         res.status(201).json({
+            success: true,
             message: 'finance created successfully'
         });
     } catch (error) {
@@ -43,7 +44,9 @@ export const getFinanceById = async (req, res) => {
         const financeId = req.params.id;
         const finance = await Finance.findById(financeId);
         if (!finance) {
-            return res.status(404).json({ message: 'finance id not found' });
+            return res.status(404).json({
+                success:false,
+                message: 'finance id not found' });
         }
         res.json(finance);
     } catch (error) {
@@ -84,6 +87,7 @@ export const updateFinance = async (req, res) => {
         );
 
         res.json({
+            success:true,
             message: 'finance updated successfully',
             finance: updatedFinance
         });
@@ -99,7 +103,9 @@ export const deleteFinance = async (req, res) => {
         if (!deletedFinance) {
             return res.status(404).json({ message: 'finance not found' });
         }
-        res.json({ message: 'finance deleted successfully' });
+        res.json({
+            success:true,
+            message: 'finance deleted successfully' });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }

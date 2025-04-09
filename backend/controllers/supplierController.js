@@ -19,6 +19,7 @@ export const createSupplier = async (req, res) => {
             address,
             status})
         res.status(201).json({
+            success: true,
             message: 'supplier created successfully'
         });
     } catch (error) {
@@ -31,7 +32,9 @@ export const getAllSupplier = async (req, res) => {
         const suppliers = await Supplier.find();
         res.json(suppliers);
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ 
+            success:false,
+            message: error.message });
     }
 };
 
@@ -80,6 +83,7 @@ export const updateSupplier = async (req, res) => {
         );
 
         res.json({
+            success: true,
             message: 'supplier updated successfully',
             supplier: updatedSupplier
         });
@@ -95,8 +99,11 @@ export const deleteSupplier = async (req, res) => {
         if (!deletedSuppliers) {
             return res.status(404).json({ message: 'supplier not found' });
         }
-        res.json({ message: 'supplier deleted successfully' });
+        res.json({
+            success: true,
+            message: 'supplier deleted successfully' });
     } catch (error) {
+        
         res.status(500).json({ message: error.message });
     }
 };
