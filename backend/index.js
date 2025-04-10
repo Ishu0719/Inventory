@@ -8,6 +8,7 @@ import customerRouter from "./routes/customerRoute.js";
 import discountRouter from "./routes/discountRoute.js";
 import financeRouter from "./routes/financeRoute.js";
 import bannerRouter from "./routes/bannerRoute.js";
+import userRouter from "./routes/user.js";
 
 import { connectDb } from './config/db.js';
 // import { connectDb } from '../config/db.js';
@@ -27,6 +28,7 @@ app.use("/customer", customerRouter)
 app.use("/discount", discountRouter)
 app.use("/finance", financeRouter)
 app.use("/banner", bannerRouter)
+app.use("/user", userRouter)
 
 app.get('/home', (req,res)=>{
     res.send("hello world")
