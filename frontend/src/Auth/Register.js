@@ -1,8 +1,7 @@
 import React from "react";
-import { Box, Button, TextField ,Grid} from "@mui/material";
+import { Box, Button, TextField } from "@mui/material";
 
-
-const Forget = () => {
+const SignIn = () => {
   return (
     <>
       <Box
@@ -24,38 +23,49 @@ const Forget = () => {
         autoComplete="off"
         className="login"
       >
-        <Box style={{margin:"20px"}} className="header_title">Forget Password</Box>
+        <Box className="header_title">Registration </Box>
 
-        <Box className="Forget">
-          <Grid>
+        <Box  style ={{marginTop:"20px"}}className="Registration">
+          
+        <TextField
+        style={{marginTop:"10px"}}
+            type="text"
+           
+            required
+            id="Username"
+            variant="standard"
+            label="Enter Username"
+          />
           <TextField
           style={{marginTop:"10px"}}
-            type=" New password"
+            type="email"
+            required
+            id="email"
+            variant="standard"
+            label="Enter Email Id"
+          />
+
+          <TextField
+          style={{marginTop:"10px"}}
+            type="password"
             required
             id="password"
             variant="standard"
-            label="New Password"
-         
+            label="Enter Password"
           />
-         
-          </Grid>
-         
-          <TextField
-          style={{marginTop:"10px"}}
-            type=" Confirm password"
-            required
-            id="password"
-            variant="standard"
-            label="Confirm Password"
-          />
-          
 
-          
-          <Button  style={{marginTop:"20px"}}className="primary_button">Password Changed</Button>
+         
+
+          <Button style={{marginTop:"20px"}} className="primary_button">
+
+            Register
+          </Button>
+
+         
         </Box>
       </Box>
     </>
   );
 };
 
-export default Forget;
+export default SignIn;

@@ -16,6 +16,8 @@ const SignIn = () => {
           mx: "auto",
           boxShadow: 3,
           borderRadius: 2,
+          marginTop: "200px",
+          marginBottom: "100px",
         }}
         noValidate
         autoComplete="off"
@@ -25,6 +27,7 @@ const SignIn = () => {
 
         <Box className="signIn">
           <TextField
+          style={{marginTop:"10px"}}
             type="email"
             required
             id="email"
@@ -33,6 +36,7 @@ const SignIn = () => {
           />
 
           <TextField
+          style={{marginTop:"10px"}}
             type="password"
             required
             id="password"

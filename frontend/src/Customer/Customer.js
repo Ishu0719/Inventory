@@ -602,7 +602,7 @@ const CustomerTable = () => {
           </Typography>
           <Box display="flex" justifyContent="center" gap={2}>
             <Button variant="outlined" onClick={handleCloseDeleteModal}>
-              CANCLE
+              CANCEL
             </Button>
             <Button
               variant="contained"

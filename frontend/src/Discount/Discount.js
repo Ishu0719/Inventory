@@ -405,13 +405,13 @@ const handleAddNew = () => {
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
                 className="border p-2"
               >
-                {discount.valid_From }
+                {discount.valid_From.split("T")[0] }
               </TableCell>
               <TableCell
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
                 className="border p-2"
               >
-                {discount.valid_To}
+                {discount.valid_To.split("T")[0] }
               </TableCell>
               
               
@@ -636,7 +636,7 @@ const handleAddNew = () => {
           </Typography>
           <Box display="flex" justifyContent="center" gap={2}>
             <Button variant="outlined" onClick={handleCloseDeleteModal}>
-              CANCLE
+              CANCEL
             </Button>
             <Button
               variant="contained"

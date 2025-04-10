@@ -404,13 +404,13 @@ const handleAddNew = () => {
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
                 className="border p-2"
               >
-                {banner.valid_From }
+                {banner.valid_From.split("T")[0]} 
               </TableCell>
               <TableCell
                 sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
                 className="border p-2"
               >
-                {banner.valid_To}
+                {banner.valid_To.split("T")[0]}
               </TableCell>
               
               
@@ -603,8 +603,10 @@ const handleAddNew = () => {
                   onChange={handleEditInputChange(field)}
                   fullWidth
                 />
+               
               </Grid>
-            ))}
+              
+             ) )};
           </Grid>
           <Box display="flex" justifyContent="flex-end" mt={3}>
             <Button variant="outlined" onClick={handleCloseEditModal}>
@@ -626,7 +628,7 @@ const handleAddNew = () => {
           </Typography>
           <Box display="flex" justifyContent="center" gap={2}>
             <Button variant="outlined" onClick={handleCloseDeleteModal}>
-              CANCLE
+              CANCEL
             </Button>
             <Button
               variant="contained"

@@ -9,12 +9,14 @@ import LayoutBanner from "./Layout/LayoutBanner";
 import LayoutDiscount from "./Layout/LayoutDiscount";
 import LayoutFinance from "./Layout/LayoutFinance";
 import { ToastContainer } from "react-toastify";
+import Register from "./Auth/Register";
 function App() {
   return (
     
     <BrowserRouter>
     <ToastContainer />
       <Routes>
+        <Route path="/register" element={<Register />} />
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/" element={<LayoutDashboard />} />
         <Route path="/product" element={<LayoutProducts />} />
