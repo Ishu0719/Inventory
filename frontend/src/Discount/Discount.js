@@ -16,6 +16,7 @@ import {
   TextField,
   Button,
   TableContainer,
+  TablePagination
 } from "@mui/material";
 import {
   Visibility,
@@ -320,7 +321,7 @@ const handleAddNew = () => {
     variant="contained" 
     color="primary"   
  onClick={handleAddNew}
- style={{ marginLeft: "auto", backgroundColor: "rgb(4,4,100)", color: "white", marginRight: "20px", marginTop:"-10px" }}
+ style={{ marginLeft: "auto", backgroundColor: "rgb(4,4,100)", color: "white", marginRight: "20px", height:"52px" }}
 
   >
     <AddIcon/>
@@ -329,7 +330,7 @@ const handleAddNew = () => {
   </div>
     <TableContainer
       component={Paper}
-      style={{ overflowX: "auto", maxWidth: 1500 }}
+      style={{ overflowX: "auto" ,maxWidth: 1250, margin: "25px", display:"flex", justifyContent:"space-between" }}
     >
       <Table className="w-full border border-gray-300">
         <TableHead
@@ -365,13 +366,13 @@ const handleAddNew = () => {
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
               Status
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
               Action
             </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          { discounts.length >0 && discounts.map((discount,index) => (
+          { discounts.length >0 && discounts .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((discount,index) => (
             <TableRow
               key={discount._id}
               className="text-center"
@@ -384,31 +385,31 @@ const handleAddNew = () => {
                 {index + 1}
               </TableCell>
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px"}}
                 className="border p-2"
               >
                 {discount.code}
               </TableCell>
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px",textAlign:"center"}}
                 className="border p-2"
               >
                 {discount.discount_Value}
               </TableCell>
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px" }}
                 className="border p-2"
               >
                 {discount.description}
               </TableCell>
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px"}}
                 className="border p-2"
               >
                 {discount.valid_From.split("T")[0] }
               </TableCell>
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px"}}
                 className="border p-2"
               >
                 {discount.valid_To.split("T")[0] }
@@ -416,7 +417,7 @@ const handleAddNew = () => {
               
               
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px",textAlign:"center" }}
                 className="border p-2"
               >
                 {discount.status}
@@ -438,7 +439,7 @@ const handleAddNew = () => {
                     <Visibility />
                   </IconButton>
                   <IconButton
-                    sx={{ color: "green" }}
+                    sx={{ color: "grey" }}
                     onClick={() => handleEdit(discount)}
                   >
                     <Edit />
@@ -497,6 +498,12 @@ const handleAddNew = () => {
                             value={addFormData.code}
                             onChange={handleAddInputChange('code')}
                             required
+                            sx={{
+                       
+                              "& .MuiFormLabel-asterisk": {
+                                color: "red",
+                              },
+                            }}
                           />
                         </Grid>
                         <Grid item xs={12}>
@@ -507,6 +514,12 @@ const handleAddNew = () => {
                             value={addFormData.discount_Value}
                             onChange={handleAddInputChange('discount_Value')}
                             required
+                            sx={{
+                       
+                              "& .MuiFormLabel-asterisk": {
+                                color: "red",
+                              },
+                            }}
                             
                           />
                         </Grid>
@@ -519,6 +532,12 @@ const handleAddNew = () => {
                             value={addFormData.description}
                             onChange={handleAddInputChange('description')}
                             required
+                            sx={{
+                       
+                              "& .MuiFormLabel-asterisk": {
+                                color: "red",
+                              },
+                            }}
                           />
                         </Grid>
                         
@@ -533,6 +552,12 @@ const handleAddNew = () => {
                             onChange={handleAddInputChange('valid_From')}
                             InputLabelProps={{ shrink: true }}
                             required
+                            sx={{
+                       
+                              "& .MuiFormLabel-asterisk": {
+                                color: "red",
+                              },
+                            }}
                           />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -545,6 +570,12 @@ const handleAddNew = () => {
                             onChange={handleAddInputChange('valid_To')}
                             InputLabelProps={{ shrink: true }}
                             required
+                            sx={{
+                       
+                              "& .MuiFormLabel-asterisk": {
+                                color: "red",
+                              },
+                            }}
                           />
                         </Grid>
                 
@@ -557,6 +588,12 @@ const handleAddNew = () => {
                               value={addFormData.status}
                               onChange={handleAddInputChange('status')}
                               required
+                              sx={{
+                       mt:2,
+                                "& .MuiFormLabel-asterisk": {
+                                  color: "red",
+                                },
+                              }}
                             >
                               <MenuItem value="Active">Active</MenuItem>
                               <MenuItem value="InActive">InActive</MenuItem>
@@ -573,6 +610,12 @@ const handleAddNew = () => {
                             <Button 
                               variant="outlined" 
                               onClick={handleCloseAddModal}
+                              sx={{
+                                color:"white",
+                                   backgroundColor: "grey.800",
+                                  
+                                 }}
+
                             >
                               Cancel
                             </Button>
@@ -580,6 +623,11 @@ const handleAddNew = () => {
                               variant="contained" 
                               color="primary"
                               onClick={handleAddDiscount}
+                              sx={{
+                          
+                                backgroundColor: "rgb(4,4,44)",
+                               
+                              }}
                             >
                               Save Discount
                             </Button>
@@ -617,10 +665,18 @@ const handleAddNew = () => {
             ))}
           </Grid>
           <Box display="flex" justifyContent="flex-end" mt={3}>
-            <Button variant="outlined" onClick={handleCloseEditModal}>
+            <Button variant="outlined" onClick={handleCloseEditModal}  sx={{
+                       color:"white",
+                          backgroundColor: "grey.800",
+                         
+                        }}>
               Cancel
             </Button>
-            <Button variant="contained" onClick={handleUpdate} sx={{ ml: 2 }}>
+            <Button variant="contained" onClick={handleUpdate} sx={{ ml: 2, 
+                          
+                          backgroundColor: "rgb(4,4,44)",
+                         
+                        }} >
               Update
             </Button>
           </Box>
@@ -635,7 +691,11 @@ const handleAddNew = () => {
             Are you sure you want to delete this discount?
           </Typography>
           <Box display="flex" justifyContent="center" gap={2}>
-            <Button variant="outlined" onClick={handleCloseDeleteModal}>
+            <Button variant="outlined" onClick={handleCloseDeleteModal}  sx={{
+                       color:"white",
+                          backgroundColor: "grey.800",
+                         
+                        }}>
               CANCEL
             </Button>
             <Button
@@ -649,6 +709,17 @@ const handleAddNew = () => {
         </Box>
       </Modal>
     </TableContainer>
+    <TablePagination 
+     //page 
+     style={{width:"1150"}}
+        rowsPerPageOptions={[10, 25, 50]}
+        component="div"
+        count={data.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </>
   );
 };

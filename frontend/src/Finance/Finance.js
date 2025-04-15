@@ -16,6 +16,7 @@ import {
   TextField,
   Button,
   TableContainer,
+  TablePagination
 } from "@mui/material";
 import {
   Visibility,
@@ -337,7 +338,7 @@ const handleAddNew = () => {
        variant="contained" 
        color="primary"   
     onClick={handleAddNew}
-    style={{ marginLeft: "auto", backgroundColor: "rgb(4,4,100)", color: "white", marginRight: "20px", marginTop:"-10px" }}
+    style={{ marginLeft: "auto", backgroundColor: "rgb(4,4,100)", color: "white", marginRight: "20px", height:"52px"}}
    
      >
        <AddIcon/>
@@ -348,7 +349,7 @@ const handleAddNew = () => {
 
     <TableContainer
       component={Paper}
-      style={{ overflowX: "auto", maxWidth: 1500 }}
+      style={{ overflowX: "auto", maxWidth: 1250,margin:"25px" }}
     >
       <Table className="w-full border border-gray-300">
         <TableHead
@@ -383,13 +384,13 @@ const handleAddNew = () => {
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
               Status
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
               Action
             </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          { finances.length>0 && finances.map((finance,index) => (
+          { finances.length>0 && finances.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) .map((finance,index) => (
             <TableRow
               key={finance._id}
               className="text-center"
@@ -402,33 +403,33 @@ const handleAddNew = () => {
                 {index + 1}
               </TableCell>
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px" }}
                 className="border p-2"
               >
                 {finance.name}
               </TableCell>
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px",textAlign:"center" }}
                 className="border p-2"
               >
                 {finance.amount}
               </TableCell>
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px" }}
                 className="border p-2"
               >
                 {finance.transaction}
                 
               </TableCell>
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px" }}
                 className="border p-2"
               >
                 {finance.category}
                
               </TableCell>
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px" }}
                 className="border p-2"
               >
                 {finance.payment_Mode}
@@ -436,7 +437,7 @@ const handleAddNew = () => {
               </TableCell>
               
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px",textAlign:"center" }}
                 className="border p-2"
               >
                 {finance.status}
@@ -458,7 +459,7 @@ const handleAddNew = () => {
                     <Visibility />
                   </IconButton>
                   <IconButton
-                    sx={{ color: "green" }}
+                    sx={{ color: "grey" }}
                     onClick={() => handleEdit(finance)}
                   >
                     <Edit />
@@ -515,6 +516,12 @@ const handleAddNew = () => {
                 value={addFormData.name}
                 onChange={handleAddInputChange('name')}
                 required
+                sx={{
+                       
+                  "& .MuiFormLabel-asterisk": {
+                    color: "red",
+                  },
+                }}
               />
             </Grid>
            
@@ -523,9 +530,16 @@ const handleAddNew = () => {
                 fullWidth
                 label="Amount"
                 name="amount"
+                type="number"
                 value={addFormData.amount}
                 onChange={handleAddInputChange('amount')}
                 required
+                sx={{
+                       
+                  "& .MuiFormLabel-asterisk": {
+                    color: "red",
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -537,6 +551,12 @@ const handleAddNew = () => {
                   value={addFormData.transaction}
                   onChange={handleAddInputChange('transaction')}
                   required
+                  sx={{
+                     mt:2,  
+                    "& .MuiFormLabel-asterisk": {
+                      color: "red",
+                    },
+                  }}
                 >
                   <MenuItem value="Income">Income</MenuItem>
                   <MenuItem value="Expense">Expense</MenuItem>
@@ -554,6 +574,12 @@ const handleAddNew = () => {
                   onChange={handleAddInputChange('category')}
                 
                   required
+                  sx={{
+                     mt:2,  
+                    "& .MuiFormLabel-asterisk": {
+                      color: "red",
+                    },
+                  }}
                 >
                   <MenuItem value="Rent">Rent</MenuItem>
                   <MenuItem value="Salary">Salary</MenuItem>
@@ -573,6 +599,12 @@ const handleAddNew = () => {
                   value={addFormData.payment_Mode}
                   onChange={handleAddInputChange('payment_Mode')}
                   required
+                  sx={{
+                    mt:2,   
+                    "& .MuiFormLabel-asterisk": {
+                      color: "red",
+                    },
+                  }}
                 >
                   <MenuItem value="UPI">UPI</MenuItem>
                   <MenuItem value="Credit Card">Credit Card</MenuItem>
@@ -590,6 +622,12 @@ const handleAddNew = () => {
                   value={addFormData.status}
                   onChange={handleAddInputChange('status')}
                   required
+                  sx={{
+                      mt:2, 
+                    "& .MuiFormLabel-asterisk": {
+                      color: "red",
+                    },
+                  }}
                 >
                   <MenuItem value="Completed">Completed</MenuItem>
                   <MenuItem value="Pending">Pending</MenuItem>
@@ -602,6 +640,11 @@ const handleAddNew = () => {
                 <Button 
                   variant="outlined" 
                   onClick={handleCloseAddModal}
+                  sx={{
+                    color:"white",
+                       backgroundColor: "grey.800",
+                      
+                     }}
                 >
                   Cancel
                 </Button>
@@ -609,6 +652,11 @@ const handleAddNew = () => {
                   variant="contained" 
                   color="primary"
                   onClick={handleAddFinance}
+                  sx={{
+                          
+                    backgroundColor: "rgb(4,4,44)",
+                   
+                  }}
                 >
                   Save Finance
                 </Button>
@@ -643,10 +691,18 @@ const handleAddNew = () => {
             ))}
           </Grid>
           <Box display="flex" justifyContent="flex-end" mt={3}>
-            <Button variant="outlined" onClick={handleCloseEditModal}>
+            <Button variant="outlined" onClick={handleCloseEditModal}   sx={{
+                       color:"white",
+                          backgroundColor: "grey.800",
+                         
+                        }}>
               Cancel
             </Button>
-            <Button variant="contained" onClick={handleUpdate} sx={{ ml: 2 }}>
+            <Button variant="contained" onClick={handleUpdate} sx={{ ml: 2 , 
+                          
+                          backgroundColor: "rgb(4,4,44)",
+                         
+                        }}>
               Update
             </Button>
           </Box>
@@ -661,7 +717,11 @@ const handleAddNew = () => {
             Are you sure you want to delete this Finance?
           </Typography>
           <Box display="flex" justifyContent="center" gap={2}>
-            <Button variant="outlined" onClick={handleCloseDeleteModal}>
+            <Button variant="outlined" onClick={handleCloseDeleteModal}   sx={{
+                       color:"white",
+                          backgroundColor: "grey.800",
+                         
+                        }}>
               CANCEL
             </Button>
             <Button
@@ -675,6 +735,17 @@ const handleAddNew = () => {
         </Box>
       </Modal>
     </TableContainer>
+    <TablePagination 
+     //page 
+     style={{width:"1150"}}
+        rowsPerPageOptions={[10, 25, 50]}
+        component="div"
+        count={data.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </>
   );
 };

@@ -40,7 +40,7 @@ export const getAllUser = async (req, res) => {
 
 export const getUserById = async (req, res) => {
     try {
-        const UserId = req.params.id;
+        const userId = req.params.id;
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).json({ message: 'user id not found' });
@@ -89,7 +89,7 @@ export const updateUser = async (req, res) => {
 
 export const deleteUser = async (req, res) => {
     try {
-        const usserId = req.params.id; 
+        const userId = req.params.id; 
         const deletedUsers = await User.findByIdAndDelete(userId); 
         if (!deletedUsers) {
             return res.status(404).json({ message: 'user not found' });

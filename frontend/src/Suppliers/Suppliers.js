@@ -16,6 +16,7 @@ import {
   TextField,
   Button,
   TableContainer,
+  TablePagination
 } from "@mui/material";
 import {
   Visibility,
@@ -23,6 +24,7 @@ import {
   Delete,
   Close as CloseIcon,
   NetworkWifiOutlined,
+ 
 } from "@mui/icons-material";
 import axios from "axios";
 import {  InputAdornment } from '@mui/material';
@@ -30,6 +32,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+
 
 import { FormControl, InputLabel } from "@mui/material";
 
@@ -315,7 +318,7 @@ const SupplierTable = () => {
     variant="contained" 
     color="primary"   
  onClick={handleAddNew}
- style={{ marginLeft: "auto", backgroundColor: "rgb(4,4,100)", color: "white", marginRight: "20px", marginTop:"-10px" }}
+ style={{ marginLeft: "auto", backgroundColor: "rgb(4,4,100)", color: "white", marginRight: "20px",height:"52px" }}
 
   >
     <AddIcon/>
@@ -324,7 +327,7 @@ const SupplierTable = () => {
   </div>
     <TableContainer
       component={Paper}
-      style={{ overflowX: "auto", maxWidth: 1500 }}
+      style={{ overflowX: "auto", maxWidth: 1250, margin: "25px", display:"flex", justifyContent:"space-between" }}
     >
       <Table className="w-full border border-gray-300">
         <TableHead
@@ -355,13 +358,13 @@ const SupplierTable = () => {
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
               Status
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
               Action
             </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          { suppliers.length>0 && suppliers.map((supplier,index) => (
+          { suppliers.length>0 && suppliers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((supplier,index) => (
             <TableRow
               key={supplier._id}
               className="text-center"
@@ -374,25 +377,25 @@ const SupplierTable = () => {
                 {index + 1} 
               </TableCell>
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px" }}
                 className="border p-2"
               >
                 {supplier.supplier_Name}
               </TableCell>
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px"}}
                 className="border p-2"
               >
                 {supplier.email}
               </TableCell>
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px" }}
                 className="border p-2"
               >
                 {supplier.mobile_Number}
               </TableCell>
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px"}}
                 className="border p-2"
               >
                 {supplier.address}
@@ -400,7 +403,7 @@ const SupplierTable = () => {
               
               
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px",textAlign:"center" }}
                 className="border p-2"
               >
                 {supplier.status}
@@ -421,7 +424,7 @@ const SupplierTable = () => {
                     <Visibility />
                   </IconButton>
                   <IconButton
-                    sx={{ color: "green" }}
+                    sx={{ color: "grey" }}
                     onClick={() => handleEdit(supplier)}
                   >
                     <Edit />
@@ -480,6 +483,13 @@ const SupplierTable = () => {
                 value={addFormData.supplier_Name}
                 onChange={handleAddInputChange('supplier_Name')}
                 required
+                sx={{
+                  mt: 2,
+                  
+                  "& .MuiFormLabel-asterisk": {
+                    color: "red",
+                  },
+                }}
               />
             </Grid>
           
@@ -493,6 +503,13 @@ const SupplierTable = () => {
                 onChange={handleAddInputChange('mobile_Number')}
             
                 required
+                sx={{
+                  mt: 2,
+                  
+                  "& .MuiFormLabel-asterisk": {
+                    color: "red",
+                  },
+                }}
               />
             </Grid>
             
@@ -504,6 +521,13 @@ const SupplierTable = () => {
                 value={addFormData.address}
                 onChange={handleAddInputChange('address')}
                 required
+                sx={{
+                  mt: 2,
+                  
+                  "& .MuiFormLabel-asterisk": {
+                    color: "red",
+                  },
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={6}>
@@ -515,6 +539,13 @@ const SupplierTable = () => {
                 value={addFormData.email}
                 onChange={handleAddInputChange('email')}
                 required
+                sx={{
+                  mt: 2,
+                  
+                  "& .MuiFormLabel-asterisk": {
+                    color: "red",
+                  },
+                }}
              
               />
             </Grid>
@@ -528,6 +559,13 @@ const SupplierTable = () => {
                   value={addFormData.status}
                   onChange={handleAddInputChange('status')}
                   required
+                  sx={{
+                    mt: 2,
+                    
+                    "& .MuiFormLabel-asterisk": {
+                      color: "red",
+                    },
+                  }}
                 >
                   <MenuItem value="Active">Active</MenuItem>
                   <MenuItem value="InActive">InActive</MenuItem>
@@ -542,6 +580,11 @@ const SupplierTable = () => {
                 <Button 
                   variant="outlined" 
                   onClick={handleCloseAddModal}
+                  sx={{
+                    color:"white",
+                       backgroundColor: "grey.800",
+                      
+                     }}
                 >
                   Cancel
                 </Button>
@@ -549,6 +592,11 @@ const SupplierTable = () => {
                   variant="contained" 
                   color="primary"
                   onClick={handleAddSupplier}
+                  sx={{
+                          
+                    backgroundColor: "rgb(4,4,44)",
+                   
+                  }}
                 >
                   Save Supplier
                 </Button>
@@ -582,10 +630,18 @@ const SupplierTable = () => {
             ))}
           </Grid>
           <Box display="flex" justifyContent="flex-end" mt={3}>
-            <Button variant="outlined" onClick={handleCloseEditModal}>
+            <Button variant="outlined" onClick={handleCloseEditModal } sx={{
+                       color:"white",
+                          backgroundColor: "grey.800",
+                         
+                        }}>
               Cancel
             </Button>
-            <Button variant="contained" onClick={handleUpdate} sx={{ ml: 2 }}>
+            <Button variant="contained" onClick={handleUpdate}  sx={{
+                          
+                          backgroundColor: "rgb(4,4,44)",
+                         ml:2
+                        }}>
               Update
             </Button>
           </Box>
@@ -600,7 +656,11 @@ const SupplierTable = () => {
             Are you sure you want to delete this supplier?
           </Typography>
           <Box display="flex" justifyContent="center" gap={2}>
-            <Button variant="outlined" onClick={handleCloseDeleteModal}>
+            <Button variant="outlined" onClick={handleCloseDeleteModal}  sx={{
+                       color:"white",
+                          backgroundColor: "grey.800",
+                         
+                        }}>
               CANCEL
             </Button>
             <Button
@@ -614,6 +674,17 @@ const SupplierTable = () => {
         </Box>
       </Modal>
     </TableContainer>
+    <TablePagination 
+     //page 
+     style={{width:"1150"}}
+        rowsPerPageOptions={[10, 25, 50]}
+        component="div"
+        count={data.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </>
   );
   };

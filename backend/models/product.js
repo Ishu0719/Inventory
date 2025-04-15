@@ -9,7 +9,7 @@ const productSchema = new Schema({
    category:{ type :String},
    cost_Price:{ type :Number},
    selling_Price:{type:Number},
-   quantity:{type:String},
+   quantity:{type:Number},
    status:{type:String},
 
    

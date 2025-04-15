@@ -16,6 +16,7 @@ import {
   TextField,
   Button,
   TableContainer,
+  TablePagination
 } from "@mui/material";
 import {
   Visibility,
@@ -313,7 +314,7 @@ const CustomerTable = () => {
     variant="contained" 
     color="primary"   
  onClick={handleAddNew}
- style={{ marginLeft: "auto", backgroundColor: "rgb(4,4,100)", color: "white", marginRight: "20px", marginTop:"-10px" }}
+ style={{ marginLeft: "auto", backgroundColor: "rgb(4,4,100)", color: "white", marginRight: "20px", height:"52px" }}
 
   >
     <AddIcon/>
@@ -323,7 +324,7 @@ const CustomerTable = () => {
     
     <TableContainer
       component={Paper}
-      style={{ overflowX: "auto", maxWidth: 1500 }}
+      style={{ overflowX: "auto", maxWidth: 1250, margin: "25px", display:"flex", justifyContent:"space-between" }}
     >
       <Table className="w-full border border-gray-300">
         <TableHead
@@ -355,13 +356,13 @@ const CustomerTable = () => {
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
               Status
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold",textAlign:"center" }} className="border p-2">
               Action
             </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          { customers.length>0 && customers.map((customer,index) => (
+          { customers.length>0 && customers  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) .map((customer,index) => (
             <TableRow
               key={customer._id}
               className="text-center"
@@ -374,25 +375,25 @@ const CustomerTable = () => {
                 {index + 1}
               </TableCell>
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px"  }}
                 className="border p-2"
               >
                 {customer.customer_Name}
               </TableCell>
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px" }}
                 className="border p-2"
               >
                 {customer.email}
               </TableCell>
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px",textAlign:"center"}}
                 className="border p-2"
               >
                 {customer.mobile_Number}
               </TableCell>
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px"}}
                 className="border p-2"
               >
                 {customer.address}
@@ -400,7 +401,7 @@ const CustomerTable = () => {
               
               
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px",textAlign:"center" }}
                 className="border p-2"
               >{customer.status}
              
@@ -421,7 +422,7 @@ const CustomerTable = () => {
                     <Visibility />
                   </IconButton>
                   <IconButton
-                    sx={{ color: "green" }}
+                    sx={{ color: "grey" }}
                     onClick={() => handleEdit(customer)}
                   >
                     <Edit />
@@ -480,6 +481,12 @@ const CustomerTable = () => {
                       value={addFormData.customer_Name}
                       onChange={handleAddInputChange('customer_Name')}
                       required
+                      sx={{
+                       
+                        "& .MuiFormLabel-asterisk": {
+                          color: "red",
+                        },
+                      }}
                     />
                   </Grid>
                 
@@ -493,6 +500,12 @@ const CustomerTable = () => {
                       onChange={handleAddInputChange('mobile_Number')}
                   
                       required
+                      sx={{
+                       
+                        "& .MuiFormLabel-asterisk": {
+                          color: "red",
+                        },
+                      }}
                     />
                   </Grid>
                   
@@ -504,6 +517,12 @@ const CustomerTable = () => {
                       value={addFormData.address}
                       onChange={handleAddInputChange('address')}
                       required
+                      sx={{
+                       
+                        "& .MuiFormLabel-asterisk": {
+                          color: "red",
+                        },
+                      }}
                     />
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -515,6 +534,14 @@ const CustomerTable = () => {
                       value={addFormData.email}
                       onChange={handleAddInputChange('email')}
                       required
+                      sx={{
+                        mt: 2,
+                        
+                        "& .MuiFormLabel-asterisk": {
+                          color: "red",
+                        },
+                      }}
+                     
                    
                     />
                   </Grid>
@@ -528,6 +555,13 @@ const CustomerTable = () => {
                         value={addFormData.status}
                         onChange={handleAddInputChange('status')}
                         required
+                        sx={{
+                          mt: 2,
+                          
+                          "& .MuiFormLabel-asterisk": {
+                            color: "red",
+                          },
+                        }}
                       >
                         <MenuItem value="Active">Active</MenuItem>
                         <MenuItem value="InActive">InActive</MenuItem>
@@ -542,6 +576,11 @@ const CustomerTable = () => {
                       <Button 
                         variant="outlined" 
                         onClick={handleCloseAddModal}
+                        sx={{
+                          color:"white",
+                             backgroundColor: "grey.800",
+                            
+                           }}
                       >
                         Cancel
                       </Button>
@@ -549,6 +588,11 @@ const CustomerTable = () => {
                         variant="contained" 
                         color="primary"
                         onClick={handleAddCustomer}
+                        sx={{
+                          
+                          backgroundColor: "rgb(4,4,44)",
+                         
+                        }}
                       >
                         Save Customer
                       </Button>
@@ -583,10 +627,18 @@ const CustomerTable = () => {
             ))}
           </Grid>
           <Box display="flex" justifyContent="flex-end" mt={3}>
-            <Button variant="outlined" onClick={handleCloseEditModal}>
+            <Button variant="outlined" onClick={handleCloseEditModal}  sx={{
+                       color:"white",
+                          backgroundColor: "grey.800",
+                         
+                        }}>
               Cancel
             </Button>
-            <Button variant="contained" onClick={handleUpdate} sx={{ ml: 2 }}>
+            <Button variant="contained" onClick={handleUpdate} sx={{ ml: 2 , 
+                          
+                          backgroundColor: "rgb(4,4,44)",
+                         
+                        }}>
               Update
             </Button>
           </Box>
@@ -601,7 +653,11 @@ const CustomerTable = () => {
             Are you sure you want to delete this customer?
           </Typography>
           <Box display="flex" justifyContent="center" gap={2}>
-            <Button variant="outlined" onClick={handleCloseDeleteModal}>
+            <Button variant="outlined" onClick={handleCloseDeleteModal}  sx={{
+                       color:"white",
+                          backgroundColor: "grey.800",
+                         
+                        }}>
               CANCEL
             </Button>
             <Button
@@ -615,6 +671,17 @@ const CustomerTable = () => {
         </Box>
       </Modal>
     </TableContainer>
+    <TablePagination 
+     //page 
+     style={{width:"1150"}}
+        rowsPerPageOptions={[10, 25, 50]}
+        component="div"
+        count={data.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handleChangePage}
+        onRowsPerPageChange={handleChangeRowsPerPage}
+      />
     </>
   );
 };

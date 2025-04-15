@@ -34,43 +34,33 @@ import { useNavigate } from "react-router-dom";
 import{FormControl,InputLabel} from "@mui/material";
 
 
-
-const ProductTable = () => {
+const PurchaseOrderTable = () => {
 
   const [data, setData] = useState([
     {
       id: 1,
-      product_Name:"wireless keyboard",
-      sku:"KB12345",
-      product_Description:"Compact Wireless keyboard",
-      category:"Electronic",
-      cost_Price:"1200",
-      selling_Price:"1500",
-      quantity:"100",
-      status:"Active"
+      supplier_Id:"4636232",
+      order_Date:"25jan 2015",
+      expected_Date:"20 march 2025",
+      status:"Pending"
      
     },
     {
-      id: 2,
-      product_Name:"wireless keyboard",
-      sku:"KB12345",
-      product_Description:"Compact Wireless keyboard",
-      category:"Electronic",
-      cost_Price:"1200",
-      selling_Price:"1500",
-      quantity:"100",
-      status: "Active",
+        id: 2,
+      supplier_Id:"4636223",
+      order_Date:"25jan 2015",
+      expected_Date:"20 march 2025",
+      status:"Cancel"
+     
+     
     },
     {
-      id: 3,
-      product_Name:"wireless keyboard",
-      sku:"KB12345",
-      product_Description:"Compact Wireless keyboard",
-      category:"Electronic",
-      cost_Price:"1200",
-      selling_Price:"1500",
-      quantity:"100",
-      status: "InActive",
+        id: 3,
+      supplier_Id:"46362356",
+      order_Date:"25jan 2015",
+      expected_Date:"20 march 2025",
+      status:"Received"
+     
     },
   ]);
 
@@ -98,22 +88,17 @@ const ProductTable = () => {
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedPurchase, setSelectedPurchase] = useState(null);
   const [editFormData, setEditFormData] = useState({});
-  const [products ,setProducts] = useState([]);
+  const [purchases ,setPurchases] = useState([]);
   const[searchTerm,setSearchTerm]=useState("");
-  const[apiProducts,setApiProducts]=useState([]);
-  
+  const[apiPurchases,setApiPurchases]=useState([]);
 
   const [addFormData, setAddFormData] = useState({
-    product_Name: "",
-    sku: "",
-    product_Description: "",
-    category: "",
-    cost_Price: "",
-    selling_Price: "",
-    quantity: "",
-    status: "Active",
+   supplier_Id:"",
+   order_Date:"",
+   expected_Date:"",
+    status: "Pending",
     
   });
 
@@ -124,34 +109,34 @@ const ProductTable = () => {
   
   
 
-  const getAllProduct = async () => {
+  const getAllPurchase = async () => {
     try {
       const res = await axios.get(
-       `http://localhost:3002/product/getAllProduct`
+       `http://localhost:3002/purchase/getAllPurchase`
       );
       console.log("response", res.data);
-      setProducts(res.data);
-      setApiProducts(res.data);
+      setPurchases(res.data);
+      setApiPurchases(res.data);
     } catch (error) {
       console.log(error);
     }
   };
   useEffect(() => {
-    getAllProduct();
+    getAllPurchase();
   }, []);
-  const handleView = (product) => {
-    setSelectedProduct(product);
+  const handleView = (purchase) => {
+    setSelectedPurchase(purchase);
     setViewModalOpen(true);
   };
 
-  const handleEdit = (product) => {
-    setSelectedProduct(product);
-    setEditFormData(product);
+  const handleEdit = (purchase) => {
+    setSelectedPurchase(purchase);
+    setEditFormData(purchase);
     setEditModalOpen(true);
   };
 
-  const handleDelete = (product) => {
-    setSelectedProduct(product);
+  const handleDelete = (purchase) => {
+    setSelectedPurchase(purchase);
     setDeleteModalOpen(true);
   };
 
@@ -173,32 +158,28 @@ const ProductTable = () => {
       [field]: event.target.value,
     });
   };
-  const handleAddProduct = async () => {
+  const handleAddPurchase = async () => {
     try {
       const res = await axios.post(
-        `http://localhost:3002/product/createProduct`,
+        `http://localhost:3002/purchase/createPurchase`,
         addFormData
       );
       if (res.data.success) {
         toast.success(res.data.message);
-        getAllProduct();
+        getAllPurchase();
         handleCloseAddModal();
         setAddFormData({
-product_Name:"",
-sku:"",
-product_Description:"",
-category:"",
-cost_Price:"",
-selling_Price:"",
-quantity:"",
-status:"Active",
+supplier_Id:"",
+order_Date:"",
+expected_Date:"",
+status:"Pending",
           
         });
 
       }
     } catch (error) {
       console.log(error);
-      toast.error(error.response?.data?.message||"Failed adding product"); 
+      toast.error(error.response?.data?.message||"Failed adding purchase"); 
     }
   };
 
@@ -212,17 +193,17 @@ status:"Active",
   };
 
   const handleTitleChange = (id,newTitle)=>{
-    setProducts((prevProducts) =>
-      prevProducts.map((product) =>
-        product.id === id ? { ...product, title: newTitle } : product
+    setPurchases((prevPurchases) =>
+      prevPurchases.map((purchase) =>
+        purchase.id === id ? { ...purchase, title: newTitle } : purchase
       )
     );
   }
 
   const handleTypeChange = (id, newType) => {
-    setProducts((prevProducts) =>
-      prevProducts.map((product) =>
-        product.id === id ? { ...product, type: newType } : product
+    setPurchases((prevPurchases) =>
+      prevPurchases.map((purchase) =>
+        purchase.id === id ? { ...purchase, type: newType } : purchase
       )
     );
   }
@@ -230,17 +211,17 @@ status:"Active",
 
 
   const handleUpdate = async () => {
-    console.log("Updating product:", editFormData);
-    // Here you would typically make an API call to update the product
+    console.log("Updating purchase:", editFormData);
+    // Here you would typically make an API call to update the purchase
     handleCloseEditModal();
      try{
           const res = await axios.put(
-            `http://localhost:3002/product/updateProduct/${selectedProduct._id}`,
+            `http://localhost:3002/purchase/updatePurchase/${selectedPurchase._id}`,
             editFormData
           );
           if(res.data.success){
             toast.success(res.data.message);
-            getAllProduct();
+            getAllPurchase();
             setEditFormData({});
           }
         }
@@ -254,11 +235,11 @@ status:"Active",
     handleCloseDeleteModal();
     try {
      const res = await axios.delete(
-    `http://localhost:3002/product/deleteProduct/${selectedProduct._id}`
+    `http://localhost:3002/purchase/deletePurchase/${selectedPurchase._id}`
    ); 
   if(res.data.success){
     toast.success(res.data.message);
-    getAllProduct();
+    getAllPurchase();
   }
 }
     catch(error){
@@ -279,32 +260,29 @@ status:"Active",
     const value = event.target.value.toLowerCase();
     setSearchTerm(value);
     if(value === "") {
-      setProducts(apiProducts);
+      setPurchases(apiPurchases);
       return ;// Reset to original data if search term is empty
     }
-    const filtered = apiProducts.filter((product) =>{
+    const filtered = apiPurchases.filter((purchase) =>{
       return(
-        product.product_Name.toLowerCase().includes(value) ||
-        product.sku.toLowerCase().includes(value) ||
-        product.product_Description.toLowerCase().includes(value) ||
-        product.category.toLowerCase().includes(value) ||
-        product.cost_Price.toNumber().includes(value) ||
-        product.selling_Price.toNumber().includes(value) ||
-        product.quantity.toNumber().includes(value) ||
-        product.status.toLowerCase().includes(value)
+        purchase.supplier_Id.toLowerCase().includes(value) ||
+        purchase.order_Date.toString().includes(value) ||
+        purchase.expected_Date.toString().includes(value) ||
+        purchase.status.toLowerCase().includes(value)
       )
     });
-      setProducts(filtered);
+      setPurchases(filtered);
   } ;
   const handleAddNew = () => {
-    // Logic to add a new product
+    // Logic to add a new purchase
     setAddModalOpen(true);  
     // You can redirect to a form or show a modal here
   }
-  
+
+ 
   return (
  <>
- <h3>PRODUCT DETAILS</h3>
+ <h3>PURCHASE ORDER DETAILS</h3>
  <div style={{ display: "flex", alignItems: "center", marginBottom: "50px",justifyContent: "space-between" }}>
     <TextField
            className='search'
@@ -329,18 +307,19 @@ status:"Active",
     variant="contained" 
     color="primary"   
     onClick={handleAddNew}
- style={{ marginLeft: "auto", backgroundColor: "rgb(4,4, 100)", color: "white", marginRight: "20px",height:"52px" }}
+ style={{ marginLeft: "auto", backgroundColor: "rgb(4,4, 100)", color: "white", marginRight: "20px", height:"52px" }}
 
   >
     <AddIcon/>
-    Add Product
+    Add order
   </Button>
   </div>
+
     <TableContainer
       component={Paper}
-      style={{ overflowX: "auto", maxWidth: 1250, margin: "25px", display:"flex", justifyContent:"space-between"}}
+      style={{ overflowX: "auto", maxWidth: 1250,margin:"25px" }}
     >
-      <Table className="w-full border border-gray-300 ">
+      <Table className="w-full border border-gray-300">
         <TableHead
           sx={{
             top: 0,
@@ -355,42 +334,30 @@ status:"Active",
               S.No
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-              Product Name
+                Supplier ID
+            </TableCell>
+           
+           
+            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
+              Ordered  Date
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-            SKU
-            </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-              Product Description
-            </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-            Category
-            </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-              Cost Price
-            </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-              {" "}
-              Selling Price
-            </TableCell>
-            <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
-              Quantity
+              Delivery Date
             </TableCell>
             <TableCell sx={{ fontWeight: "bold" }} className="border p-2">
               Status
             </TableCell>
-            <TableCell sx={{ fontWeight: "bold", textAlign:"center" }} className="border p-2">
+            <TableCell sx={{ fontWeight: "bold" ,textAlign:"center"}} className="border p-2">
               Action
             </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          { products.length>0 && products
+          { purchases.length>0 && purchases
           .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            
-          .map((product,index) => (
+          .map((purchase,index) => (
             <TableRow
-              key={product._id}
+              key={purchase._id}
               className="text-center"
               sx={{ fontWeight: "bold" }}
             >
@@ -400,52 +367,29 @@ status:"Active",
               >
                 {index + 1} 
               </TableCell>
+             
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", }}
+                sx={{ padding: "4px", fontSize: "12px",  }}
                 className="border p-2"
               >
-                {product.product_Name}
+                {purchase.supplier_Id}
               </TableCell>
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px"}}
                 className="border p-2"
               >
-                {product.sku}
+                {purchase.order_Date.split("T")[0]}
               </TableCell>
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px" }}
                 className="border p-2"
               >
-                {product.product_Description}
+                {purchase.expected_Date.split("T")[0]}
               </TableCell>
               <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
+                sx={{ padding: "4px", fontSize: "12px",textAlign:"center"}}
                 className="border p-2"
-              >
-                {product.category}
-              </TableCell>
-              <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
-                className="border p-2"
-              >
-                {product.cost_Price}
-              </TableCell>
-              <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
-                className="border p-2"
-              >
-                {product.selling_Price}
-              </TableCell>
-              <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
-                className="border p-2"
-              >
-                {product.quantity}
-              </TableCell>
-              <TableCell
-                sx={{ padding: "4px", fontSize: "12px", textAlign: "center" }}
-                className="border p-2"
-              >{product.status}
+              >{purchase.status}
                 
               </TableCell>
               <TableCell sx={{ fontWeight: "bolder" }} className="border p-2">
@@ -459,31 +403,26 @@ status:"Active",
                   <IconButton
                     sx={{ color: "blue" }}
                     fontweight="bolder"
-                    onClick={() => handleView(product)}
+                    onClick={() => handleView(purchase)}
                   >
                     <Visibility />
                   </IconButton>
                   <IconButton
                     sx={{ color: "grey" }}
-                    onClick={() => handleEdit(product)}
+                    onClick={() => handleEdit(purchase)}
                   >
                     <Edit />
                   </IconButton>
                   <IconButton
                     sx={{ color: "red" }}
-                    onClick={() => handleDelete(product)}
+                    onClick={() => handleDelete(purchase)}
                   >
                     <Delete />
                   </IconButton>
                 </TableContainer>
-              
-
               </TableCell>
-              
             </TableRow>
-            
           ))}
-          
         </TableBody>
       </Table>
 
@@ -491,74 +430,19 @@ status:"Active",
             <Modal open={addModalOpen} onClose={handleCloseAddModal}>
               <Box sx={modalStyle}>
                 <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
-                  <Typography variant="h6" fontWeight="bold">Add New Product</Typography>
+                  <Typography variant="h6" fontWeight="bold">Add New Purchase Order</Typography>
                   <IconButton onClick={handleCloseAddModal}>
                     <CloseIcon />
                   </IconButton>
                 </Box>
-                <Grid container spacing={3}>
-                  <Grid item xs={12}>
+                  <Grid  style={{margin:"10px"}}>
+                  <Grid item  sm={6} mb={1}>
                     <TextField
                       fullWidth
-                      label="Product Name"
-                      name="product_Name"
-                      value={addFormData.product_Name}
-                      onChange={handleAddInputChange('product_Name')}
-                      
-                      required
-                      sx={{
-                       
-                        "& .MuiFormLabel-asterisk": {
-                          color: "red",
-                        },
-                      }}
-                    />
-                  </Grid>
-                
-                <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="SKU"
-                      name="sku"
-                      value={addFormData.sku}
-                      onChange={handleAddInputChange('sku')}
-                    
-                      required
-                      sx={{
-                       
-                        "& .MuiFormLabel-asterisk": {
-                          color: "red",
-                        },
-                      }}
-                    />
-                  </Grid>
-                  
-                  <Grid item xs={12}>
-                    <TextField
-                      fullWidth
-                      label="Product Description"
-                      name="product_Description"
-                      value={addFormData.product_Description}
-                      onChange={handleAddInputChange('product_Description')}
-                      
-                      required
-                      sx={{
-                       
-                        "& .MuiFormLabel-asterisk": {
-                          color: "red",
-                        },
-                      }}
-                     
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      label="Category"
-                      name="category"
-                      value={addFormData.category}
-                      onChange={handleAddInputChange('category')}  
-                      
+                      label="Supplier ID"
+                      name="supplier_Id"
+                      value={addFormData.supplier_Id}
+                      onChange={handleAddInputChange('supplier_Id')} 
                       required
                       sx={{
                        
@@ -569,35 +453,15 @@ status:"Active",
                    
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={6} mb={1}>
                     <TextField
                       fullWidth
-                      label="Cost Price"
-                      name="cost_Price"
-                      type="number"
-                      value={addFormData.cost_Price}
-                      onChange={handleAddInputChange('cost_Price')} 
-                       
-                       
-                      required
-                      sx={{
-                        
-                        "& .MuiFormLabel-asterisk": {
-                          color: "red",
-                        },
-                      }}
-                   
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField
-                      fullWidth
-                      label="Selling Price"
-                      name="selling_Price"
-                      type="number"
-                      value={addFormData.selling_Price}
-                      onChange={handleAddInputChange('selling_Price')} 
-                       
+                      label="Order Date"
+                      name="order_Date"
+                      type="date"
+                      value={addFormData.order_Date}
+                      onChange={handleAddInputChange('order_Date')}
+                      InputLabelProps={{ shrink: true }} 
                       required
                       sx={{
                        
@@ -608,15 +472,15 @@ status:"Active",
                    
                     />
                   </Grid>
-                  <Grid item xs={12} sm={6}>
+                  <Grid item xs={12} sm={6} mb={1}>
                     <TextField
                       fullWidth
-                      label="Quantity"
-                      name="quantity" 
-                      type="number"
-                      value={addFormData.quantity}
-                      onChange={handleAddInputChange('quantity')} 
-                       
+                      label="Delivery Date"
+                      name="expected_Date" 
+                      type="date"
+                      value={addFormData.expected_Date}
+                      onChange={handleAddInputChange('expected_Date')} 
+                      InputLabelProps={{ shrink: true }}
                       required
                       sx={{
                        
@@ -628,18 +492,15 @@ status:"Active",
                     />
                   </Grid>
           
-                  <Grid item xs={12} sm={6}>
-                    
-                    <FormControl fullWidth >
+                  <Grid item xs={12} sm={6} mb={1}>
+                    <FormControl fullWidth>
                       <InputLabel id="status-label">Status</InputLabel>
                       <Select
                         labelId="status-label"
-                       
                         name="status"
                         value={addFormData.status}
                         onChange={handleAddInputChange('status')}
                         required
-                        
                         sx={{
                           mt: 2,
                           
@@ -647,9 +508,12 @@ status:"Active",
                             color: "red",
                           },
                         }}
+                        
+
                       >
-                        <MenuItem value="Active">Active</MenuItem>
-                        <MenuItem value="InActive">InActive</MenuItem>
+                        <MenuItem value="Pending">Pending</MenuItem>
+                        <MenuItem value="Recieved">Recieved</MenuItem>
+                        <MenuItem value="Cancel">Cancel</MenuItem>
                   
                       </Select>
                     </FormControl>
@@ -662,44 +526,45 @@ status:"Active",
                         variant="outlined" 
                         onClick={handleCloseAddModal}
                         sx={{
-                       color:"white",
-                          backgroundColor: "grey.800",
-                         
-                        }}
-                        
+                          color:"white",
+                             backgroundColor: "grey.800",
+                            
+                           }}
                       >
                         Cancel
                       </Button>
                       <Button 
                         variant="contained" 
                         color="primary"
-                        onClick={handleAddProduct}
+                        onClick={handleAddPurchase}
                         sx={{
                           
                           backgroundColor: "rgb(4,4,44)",
                          
                         }}
                       >
-                        Save Product
+                        Save Purchase
                       </Button>
                     </Box>
-                  </Grid>
-                </Grid>
-              </Box>
-            </Modal>
+                  </Grid> 
+                 </Grid>
+                 </Box>
+                </Modal>
+            
+          
 
       {/* View Modal */}
       <Modal open={viewModalOpen} onClose={handleCloseViewModal}>
         <Box sx={modalStyle}>
           <Box display="flex" justifyContent="space-between">
-            <Typography variant="h6">Product Details</Typography>
+            <Typography variant="h6">Purchase Details</Typography>
             <IconButton onClick={handleCloseViewModal}>
               <CloseIcon />
             </IconButton>
           </Box>
-          {selectedProduct && (
+          {selectedPurchase && (
             <Grid container spacing={2} mt={2}>
-              {Object.entries(selectedProduct).map(([key, value]) => (
+              {Object.entries(selectedPurchase).map(([key, value]) => (
                 <Grid item xs={6} key={key}>
                   <Typography>
                     <strong>{key}:</strong> {value}
@@ -710,7 +575,6 @@ status:"Active",
           )}
         </Box>
       </Modal>
-
 
 
 
@@ -728,38 +592,24 @@ status:"Active",
             .filter((field) => field !== "createdAt" && field !== "updatedAt" && field !== "__v" && field !== "_id")
             .map((field) => (
               <Grid item xs={6} key={field}>
-               
-            
-
                 <TextField
                   label={field}
                   value={editFormData[field] || ""}
                   onChange={handleEditInputChange(field)}
                   fullWidth
                 />
-                
-                  
-            
               </Grid>
             ))}
           </Grid>
-          <Box display="flex" justifyContent="flex-end" mt={3} >
-            <Button variant="outlined" onClick={handleCloseEditModal}  sx={{
+          <Box display="flex" justifyContent="flex-end" mt={3}>
+            <Button variant="outlined" onClick={handleCloseEditModal} sx={{
                        color:"white",
                           backgroundColor: "grey.800",
-                          margin:"5px",
-                          height:"40px"
                          
                         }}>
               Cancel
             </Button>
-            <Button variant="contained" onClick={handleUpdate}  sx={{
-                          
-                          backgroundColor: "rgb(4,4,44)",
-                          margin:"5px",
-                          height:"40px"
-                         
-                        }}>
+            <Button variant="contained" onClick={handleUpdate} sx={{ ml: 2 , backgroundColor: "rgb(4,4,44)"}}>
               Update
             </Button>
           </Box>
@@ -771,10 +621,10 @@ status:"Active",
         <Box sx={deleteModalStyle}>
           <Typography variant="h6">Confirm Delete</Typography>
           <Typography my={2}>
-            Are you sure you want to delete this product?
+            Are you sure you want to delete this purchase?
           </Typography>
           <Box display="flex" justifyContent="center" gap={2}>
-            <Button variant="outlined" onClick={handleCloseDeleteModal}  sx={{
+            <Button variant="outlined" onClick={handleCloseDeleteModal} sx={{
                        color:"white",
                           backgroundColor: "grey.800",
                          
@@ -807,5 +657,4 @@ status:"Active",
   );
 };
 
-
-export default ProductTable;
+export default PurchaseOrderTable;

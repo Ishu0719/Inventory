@@ -57,10 +57,10 @@ body {
   align-items: center;
 }
 .logo {
-  height:100px;
-  width:200px;
+  
+  width:auto;
   object-fit: cover;
-  margin-bottom: 20px;
+  margin: 20px;
   display: flex;
   justify-content: center;
   align-items: center;

@@ -8,7 +8,10 @@ import customerRouter from "./routes/customerRoute.js";
 import discountRouter from "./routes/discountRoute.js";
 import financeRouter from "./routes/financeRoute.js";
 import bannerRouter from "./routes/bannerRoute.js";
-import userRouter from "./routes/user.js";
+import userRouter from "./routes/userRoute.js";
+import stockRouter from "./routes/stockRoute.js";
+import purchaseRouter from "./routes/purchaseRoute.js";
+import forgetRouter from "./routes/forgetRoute.js";
 
 import { connectDb } from './config/db.js';
 // import { connectDb } from '../config/db.js';
@@ -29,6 +32,9 @@ app.use("/discount", discountRouter)
 app.use("/finance", financeRouter)
 app.use("/banner", bannerRouter)
 app.use("/user", userRouter)
+app.use("/stock",stockRouter)
+app.use("/purchase",purchaseRouter)
+app.use("/forget",forgetRouter)
 
 app.get('/home', (req,res)=>{
     res.send("hello world")

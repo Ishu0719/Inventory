@@ -10,6 +10,8 @@ import LayoutDiscount from "./Layout/LayoutDiscount";
 import LayoutFinance from "./Layout/LayoutFinance";
 import { ToastContainer } from "react-toastify";
 import Register from "./Auth/Register";
+import LayoutStock from "./Layout/LayoutStock"; 
+import LayoutPurchase from "./Layout/LayoutPurchase";
 function App() {
   return (
     
@@ -25,7 +27,9 @@ function App() {
         <Route path="/banner" element={<LayoutBanner />} />
         <Route path="/discount" element={<LayoutDiscount />} />
         <Route path="/finance" element={<LayoutFinance />} />
-        <Route path="/forget-password" element={<Forget />} />
+        <Route path="/forget" element={<Forget />} />
+        <Route path="/stock" element={<LayoutStock/>}/>
+      <Route path ="/purchase"element ={<LayoutPurchase/>}/>
       </Routes>
     </BrowserRouter>
   );

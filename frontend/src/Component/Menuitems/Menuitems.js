@@ -34,6 +34,16 @@ const Menuitems = [
     label: "Finance",
     href: "/finance",
   },
+  {
+    icon: "/sidebar/stock.png",
+    label: "Stock",
+    href: "/stock",
+  },
+  {
+    icon: "/sidebar/purchase.png",
+    label: "Purchase",
+    href: "/purchase",
+  },
 ];
 
 export default Menuitems;
